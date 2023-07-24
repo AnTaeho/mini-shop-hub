@@ -1,6 +1,6 @@
-package com.example.minishophub.user.persistence
+package com.example.minishophub.domain.user.persistence
 
-import com.example.minishophub.user.controller.dto.request.UserUpdateRequest
+import com.example.minishophub.domain.user.controller.dto.request.UserUpdateRequest
 import jakarta.persistence.*
 import org.springframework.security.crypto.password.PasswordEncoder
 

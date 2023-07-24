@@ -1,10 +1,10 @@
 package com.example.minishophub.service.user
 
-import com.example.minishophub.user.controller.dto.request.UserJoinRequest
-import com.example.minishophub.user.controller.dto.request.UserUpdateRequest
-import com.example.minishophub.user.persistence.User
-import com.example.minishophub.user.persistence.UserRepository
-import com.example.minishophub.user.service.UserService
+import com.example.minishophub.domain.user.controller.dto.request.UserJoinRequest
+import com.example.minishophub.domain.user.controller.dto.request.UserUpdateRequest
+import com.example.minishophub.domain.user.persistence.User
+import com.example.minishophub.domain.user.persistence.UserRepository
+import com.example.minishophub.domain.user.service.UserService
 import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.DisplayName

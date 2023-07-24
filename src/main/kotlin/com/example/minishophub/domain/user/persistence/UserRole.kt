@@ -1,4 +1,4 @@
-package com.example.minishophub.user.persistence
+package com.example.minishophub.domain.user.persistence
 
 enum class UserRole(
     val key: String

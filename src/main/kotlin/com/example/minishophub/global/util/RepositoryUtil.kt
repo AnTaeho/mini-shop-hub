@@ -1,4 +1,4 @@
-package com.example.minishophub.util
+package com.example.minishophub.global.util
 
 import org.springframework.data.repository.CrudRepository
 import org.springframework.data.repository.findByIdOrNull

@@ -1,9 +1,9 @@
-package com.example.minishophub.user.controller
+package com.example.minishophub.domain.user.controller
 
-import com.example.minishophub.user.controller.dto.request.UserJoinRequest
-import com.example.minishophub.user.controller.dto.request.UserUpdateRequest
-import com.example.minishophub.user.controller.dto.response.UserResponse
-import com.example.minishophub.user.service.UserService
+import com.example.minishophub.domain.user.controller.dto.request.UserJoinRequest
+import com.example.minishophub.domain.user.controller.dto.request.UserUpdateRequest
+import com.example.minishophub.domain.user.controller.dto.response.UserResponse
+import com.example.minishophub.domain.user.service.UserService
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -33,7 +33,8 @@ class UserController (
 
     @PutMapping("/{userId}")
     fun updateUser(@PathVariable userId: Long,
-                   @RequestBody updateRequest: UserUpdateRequest) {
+                   @RequestBody updateRequest: UserUpdateRequest
+    ) {
         userService.update(userId, updateRequest)
     }
 

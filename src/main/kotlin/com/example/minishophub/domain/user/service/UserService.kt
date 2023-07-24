@@ -1,11 +1,11 @@
-package com.example.minishophub.user.service
+package com.example.minishophub.domain.user.service
 
-import com.example.minishophub.user.controller.dto.request.UserJoinRequest
-import com.example.minishophub.user.controller.dto.request.UserUpdateRequest
-import com.example.minishophub.user.persistence.User
-import com.example.minishophub.user.persistence.UserRepository
-import com.example.minishophub.user.persistence.UserRole
-import com.example.minishophub.util.findByIdOrThrow
+import com.example.minishophub.domain.user.controller.dto.request.UserJoinRequest
+import com.example.minishophub.domain.user.controller.dto.request.UserUpdateRequest
+import com.example.minishophub.domain.user.persistence.User
+import com.example.minishophub.domain.user.persistence.UserRepository
+import com.example.minishophub.domain.user.persistence.UserRole
+import com.example.minishophub.global.util.findByIdOrThrow
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional

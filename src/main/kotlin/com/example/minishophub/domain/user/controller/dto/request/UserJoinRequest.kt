@@ -1,4 +1,4 @@
-package com.example.minishophub.user.controller.dto.request
+package com.example.minishophub.domain.user.controller.dto.request
 
 data class UserJoinRequest (
     val email: String,

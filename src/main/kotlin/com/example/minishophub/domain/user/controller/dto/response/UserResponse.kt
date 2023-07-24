@@ -1,7 +1,7 @@
-package com.example.minishophub.user.controller.dto.response
+package com.example.minishophub.domain.user.controller.dto.response
 
-import com.example.minishophub.user.persistence.User
-import com.example.minishophub.user.persistence.UserRole
+import com.example.minishophub.domain.user.persistence.User
+import com.example.minishophub.domain.user.persistence.UserRole
 
 data class UserResponse(
     val userId: Long,

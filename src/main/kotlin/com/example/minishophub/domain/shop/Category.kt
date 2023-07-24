@@ -1,4 +1,4 @@
-package com.example.minishophub.shop
+package com.example.minishophub.domain.shop
 
 enum class Category {
     TOP,
