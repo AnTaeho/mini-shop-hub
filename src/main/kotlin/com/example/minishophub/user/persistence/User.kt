@@ -1,20 +1,21 @@
 package com.example.minishophub.user.persistence
 
+import com.example.minishophub.user.controller.dto.request.UserUpdateRequest
 import jakarta.persistence.*
 import org.springframework.security.crypto.password.PasswordEncoder
 
 @Entity
 @Table(name = "USERS")
 class User(
-    private val email: String,
-    private var password: String,
-    private val nickname: String,
+    var email: String,
+    var password: String,
+    var nickname: String,
     private val imageUrl: String? = null,
-    private val age: Int,
-    private val city: String,
+    var age: Int,
+    var city: String,
 
     @Enumerated(EnumType.STRING)
-    private var role: UserRole,
+    var role: UserRole,
 
     @Enumerated(EnumType.STRING)
     private val socialType: SocialType? = null,
@@ -37,5 +38,25 @@ class User(
 
     fun updateRefreshToken(updateRefreshToken: String) {
         this.refreshToken = updateRefreshToken
+    }
+
+    fun update(updateRequest: UserUpdateRequest) {
+        this.email = updateRequest.email
+        this.nickname = updateRequest.nickname
+        this.age = updateRequest.age
+        this.city = updateRequest.city
+    }
+
+    companion object {
+        fun fixture(): User {
+            return User(
+                email = "fixture@naver.com",
+                password = "password",
+                nickname = "nickname",
+                age = 26,
+                city = "city",
+                role = UserRole.GUEST,
+            )
+        }
     }
 }

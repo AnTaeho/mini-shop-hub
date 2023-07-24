@@ -1,18 +1,23 @@
 package com.example.minishophub.user.service
 
-import com.example.minishophub.user.controller.dto.UserJoinRequest
+import com.example.minishophub.user.controller.dto.request.UserJoinRequest
+import com.example.minishophub.user.controller.dto.request.UserUpdateRequest
 import com.example.minishophub.user.persistence.User
 import com.example.minishophub.user.persistence.UserRepository
 import com.example.minishophub.user.persistence.UserRole
+import com.example.minishophub.util.findByIdOrThrow
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
+@Transactional(readOnly = true)
 class UserService (
     private val userRepository: UserRepository,
     private val passwordEncoder: PasswordEncoder
 ) {
 
+    @Transactional
     fun join(joinRequest: UserJoinRequest) {
 
         if (userRepository.findByEmail(joinRequest.email) != null) {
@@ -33,7 +38,29 @@ class UserService (
 
         user.passwordEncode(passwordEncoder)
         userRepository.save(user)
+    }
 
+    fun find(userId: Long): User {
+        return userRepository.findByIdOrThrow(userId)
+    }
+
+    @Transactional
+    fun update(userId: Long, updateRequest: UserUpdateRequest) {
+        val user = userRepository.findByIdOrThrow(userId)
+
+        if (userRepository.findByEmail(updateRequest.email) != null) {
+            throw IllegalArgumentException("이미 존재하는 이메일 입니다.")
+        }
+        if (userRepository.findByNickname(updateRequest.nickname) != null) {
+            throw IllegalArgumentException("이미 존재하는 닉네임 입니다.")
+        }
+
+        user.update(updateRequest)
+    }
+
+    @Transactional
+    fun delete(userId: Long) {
+        userRepository.deleteById(userId)
     }
 
 }
