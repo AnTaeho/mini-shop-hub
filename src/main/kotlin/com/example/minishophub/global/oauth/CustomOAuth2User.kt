@@ -10,5 +10,4 @@ class CustomOAuth2User(
     nameAttributeKey: String?,
     val email: String,
     val role: UserRole,
-) : DefaultOAuth2User(authorities, attributes, nameAttributeKey) {
-}
+) : DefaultOAuth2User(authorities, attributes, nameAttributeKey)

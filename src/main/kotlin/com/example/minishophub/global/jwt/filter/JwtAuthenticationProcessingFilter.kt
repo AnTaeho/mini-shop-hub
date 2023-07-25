@@ -13,6 +13,13 @@ import org.springframework.security.core.authority.mapping.NullAuthoritiesMapper
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.filter.OncePerRequestFilter
 
+/**
+ * JWT 인증 필터
+ * "/login" 이외의 URI 요청이 왔을 때 처리
+ *
+ * 기본적으로 AccessToken 만 사용
+ * AccessToken 만료시 RefreshToken 같이 사용
+ */
 class JwtAuthenticationProcessingFilter(
     private val jwtService: JwtService,
     private val userRepository: UserRepository,
@@ -34,6 +41,7 @@ class JwtAuthenticationProcessingFilter(
             return
         }
 
+        // RefreshToken 있을 시에 같이 전송하고, AccessToken 재발급 후 탈출
         val refreshToken = jwtService.extractRefreshToken(request)
         if (refreshToken != null) {
             checkRefreshTokenAndReIssueAccessToken(response, refreshToken)
@@ -43,6 +51,9 @@ class JwtAuthenticationProcessingFilter(
         checkAccessTokenAndAuthentication(request, response, filterChain)
     }
 
+    /**
+     * RefreshToken 검증후 AccessToken, RefreshToken 재발급
+     */
     private fun checkRefreshTokenAndReIssueAccessToken(response: HttpServletResponse,
                                                        refreshToken: String) {
         val user = userRepository.findByRefreshToken(refreshToken)
@@ -79,11 +90,8 @@ class JwtAuthenticationProcessingFilter(
         filterChain.doFilter(request, response)
     }
 
-    fun saveAuthentication(user: User) {
-        var password = user.password
-        if (password != null) {
-            password = PasswordUtil.generateRandomPassword()
-        }
+    private fun saveAuthentication(user: User) {
+        val password: String = PasswordUtil.generateRandomPassword()
 
         val userDetailsUser = org.springframework.security.core.userdetails.User.builder()
             .username(user.email)

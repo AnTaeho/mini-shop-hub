@@ -17,6 +17,9 @@ class OAuthAttributes(
     val oAuth2UserInfo: OAuth2UserInfo,
 ) {
 
+    /**
+     * SocialType 에 맞춰서 OAuthAttribute 객체 반환
+     */
     companion object {
         fun of(socialType: SocialType,
                userNameAttributeName: String,
@@ -52,14 +55,20 @@ class OAuthAttributes(
         }
     }
 
+    /**
+     * ofXXX 메서드로 OAuthAttribute 객체가 생성 되었고, 유저 정보가 담긴 OAuth2UserInfo 가 주입 된 상태
+     * OAuth2UserInfo 에서 정보를 가져와 User Entity 반환
+     */
     fun toEntity(socialType: SocialType, oAuth2UserInfo: OAuth2UserInfo): User {
         return User(
-            socialType =  socialType,
-            socialId = oAuth2UserInfo.getId(),
-            email = UUID.randomUUID().toString() + "@socialUser.com",
-            nickname = oAuth2UserInfo.getNickname(),
-            imageUrl = oAuth2UserInfo.getImageUrl(),
-            role = UserRole.GUEST
+            nickname = oAuth2UserInfo.getNickname()!!,
+            socialId = oAuth2UserInfo.getId()!!,
+            socialType = socialType,
+            email = oAuth2UserInfo.getEmail()!!,
+            role = UserRole.GUEST,
+            age = -1,
+            password = "NOT_NEEDED",
+            city = "none"
         )
     }
 

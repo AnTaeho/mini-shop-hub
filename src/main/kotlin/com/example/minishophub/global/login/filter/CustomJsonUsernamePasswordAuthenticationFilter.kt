@@ -21,11 +21,19 @@ class CustomJsonUsernamePasswordAuthenticationFilter(
         const val CONTENT_TYPE = "application/json"
         const val USERNAME_KEY = "email"
         const val PASSWORD_KEY = "password"
+
+        // "/login" & POST 요청만 매칭
         val DEFAULT_LOGIN_PATH_REQUEST_MATCHER =
             AntPathRequestMatcher(DEFAULT_LOGIN_REQUEST_URL, HTTP_METHOD)
     }
 
+    /**
+     * StreamUtils 를 통해서 request 에서 messageBody(JSON) 추출
+     * messageBody 를 Map 으로 변환 후 추출
+     * 추출한 email, password 를  UsernamePasswordAuthenticationToken 의 파라미터로 대입
+     */
     override fun attemptAuthentication(request: HttpServletRequest, response: HttpServletResponse): Authentication {
+        // JSON 요청만 처리
         if (request.contentType == null || !request.contentType.equals(CONTENT_TYPE)) {
             throw AuthenticationServiceException("Authentication Content-Type not supported: " + request.contentType)
         }

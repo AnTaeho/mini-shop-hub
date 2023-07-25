@@ -24,8 +24,9 @@ class OAuth2LoginSuccessHandler(
 
             if (oAuth2User.role == UserRole.GUEST) {
                 val accessToken = jwtService.createAccessToken(oAuth2User.email)
+                println(oAuth2User.email)
                 response.addHeader(jwtService.accessHeader, "Bearer $accessToken")
-                response.sendRedirect("/oauth2/sign-up")
+                response.sendRedirect("/login-home")
                 jwtService.sendAccessAndRefreshToken(response, accessToken, null)
             } else {
                 loginSuccess(response, oAuth2User)

@@ -49,7 +49,7 @@ class SecurityConfig (
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .authorizeHttpRequests {
                 it.requestMatchers("/","/css/**","/images/**","/js/**","/favicon.ico","/h2-console/**").permitAll()
-                it.requestMatchers("/user/join").permitAll()
+                it.requestMatchers("/sign-up").permitAll()
                 it.anyRequest().authenticated()
             }
             .oauth2Login {

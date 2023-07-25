@@ -13,9 +13,9 @@ class NaverOAuth2UserInfo(attributes: MutableMap<String, Any>) : OAuth2UserInfo(
         return (response["nickname"] as String?)!!
     }
 
-    override fun getImageUrl(): String? {
+    override fun getEmail(): String? {
         val response = attributes["response"] as Map<*, *>? ?: return null
-
-        return (response["profile_image"] as String?)!!
+        return (response["email"] as String?)!!
     }
+
 }

@@ -8,5 +8,6 @@ abstract class OAuth2UserInfo(
 
     abstract fun getNickname(): String?
 
-    abstract fun getImageUrl(): String?
+    abstract fun getEmail(): String?
+
 }

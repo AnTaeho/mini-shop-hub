@@ -44,6 +44,9 @@ class JwtService (
         return JWT.create()
             .withSubject(ACCESS_TOKEN_SUBJECT)
             .withExpiresAt(Date(now.time + accessTokenExpirationPeriod))
+
+            //클레임에 추가적인 정보 추가 가능
+            //.withClaim("이름", 내용)
             .withClaim(EMAIL_CLAIM, email)
             .sign(Algorithm.HMAC512(secretKey))
     }
@@ -62,6 +65,7 @@ class JwtService (
 
     /**
      * AccessToken 헤더에 실어서 보내기
+     * OAuth2 인증에 사용
      */
     fun sendAccessToken(response: HttpServletResponse, accessToken: String) {
         response.status = HttpServletResponse.SC_OK
@@ -70,6 +74,7 @@ class JwtService (
 
     /**
      * AccessToken + RefreshToken 헤더에 실어서 보내기
+     * JWT(일반 로그인) 인증에 사용
      */
     fun sendAccessAndRefreshToken(
         response: HttpServletResponse,
@@ -87,7 +92,7 @@ class JwtService (
      * 헤더를 가져온 후 "Bearer"를 삭제(""로 replace)
      */
     fun extractRefreshToken(request: HttpServletRequest): String? {
-        val header = request.getHeader(refreshHeader)
+        val header = request.getHeader(refreshHeader) ?: return null
         return if (header.startsWith(BEARER)) {
             header.replace(BEARER, "")
         } else null
@@ -99,16 +104,16 @@ class JwtService (
      * 헤더를 가져온 후 "Bearer"를 삭제(""로 replace)
      */
     fun extractAccessToken(request: HttpServletRequest): String? {
-        val header = request.getHeader(accessHeader)
+        val header = request.getHeader(accessHeader) ?: return null
         return if (header.startsWith(BEARER)) {
             header.replace(BEARER, "")
         } else null
     }
 
     /**
-     * AccessToken에서 Email 추출
+     * AccessToken 에서 Email 추출
      * 추출 전에 JWT.require()로 검증기 생성
-     * verify로 AceessToken 검증 후
+     * verify 로 AcㅊessToken 검증 후
      * 유효하다면 getClaim()으로 이메일 추출
      * 유효하지 않다면 빈 Optional 객체 반환
      */

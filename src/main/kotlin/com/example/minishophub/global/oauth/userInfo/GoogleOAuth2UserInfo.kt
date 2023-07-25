@@ -10,7 +10,8 @@ class GoogleOAuth2UserInfo(attributes: MutableMap<String, Any>) : OAuth2UserInfo
         return attributes["name"] as String?
     }
 
-    override fun getImageUrl(): String? {
-        return attributes["picture"] as String?
+    override fun getEmail(): String? {
+        return (attributes["email"] as String?)!!
     }
+
 }

@@ -29,6 +29,9 @@ class LoginSuccessHandler(
             user.updateRefreshToken(refreshToken)
             userRepository.saveAndFlush(user)
         }
+
+        println("로그인에 성공했습니다. 이메일 : $email")
+        println("로그인에 성공했습니다. AccessToken : $accessToken")
     }
 
     private fun extractUsername(authentication: Authentication): String {
