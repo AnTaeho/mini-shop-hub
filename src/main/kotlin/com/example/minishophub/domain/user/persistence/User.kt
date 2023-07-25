@@ -2,17 +2,19 @@ package com.example.minishophub.domain.user.persistence
 
 import com.example.minishophub.domain.user.controller.dto.request.UserUpdateRequest
 import jakarta.persistence.*
+import lombok.Builder
 import org.springframework.security.crypto.password.PasswordEncoder
 
 @Entity
+@Builder
 @Table(name = "USERS")
 class User(
-    var email: String,
-    var password: String,
-    var nickname: String,
+    var email: String = "",
+    var password: String? = "",
+    var nickname: String? = "",
     private val imageUrl: String? = null,
-    var age: Int,
-    var city: String,
+    var age: Int = 0,
+    var city: String = "",
 
     @Enumerated(EnumType.STRING)
     var role: UserRole,

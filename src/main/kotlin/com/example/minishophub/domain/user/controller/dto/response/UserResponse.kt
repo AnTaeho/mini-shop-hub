@@ -15,7 +15,7 @@ data class UserResponse(
         fun of(user: User): UserResponse {
             return UserResponse(
                 userId = user.id!!,
-                nickname = user.nickname,
+                nickname = user.nickname!!,
                 email = user.email,
                 age = user.age,
                 city = user.city,
