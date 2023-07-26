@@ -4,8 +4,7 @@ import com.example.minishophub.domain.user.controller.dto.request.SellerApplyReq
 import com.example.minishophub.domain.user.controller.dto.request.UserUpdateRequest
 import com.example.minishophub.domain.user.persistence.seller.Seller
 import com.example.minishophub.domain.user.service.SellerService
-import jakarta.servlet.http.HttpServletRequest
-import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.web.bind.annotation.*
 
@@ -17,10 +16,9 @@ class SellerController(
 
     @PostMapping
     fun changeToSeller(@RequestBody applyRequest: SellerApplyRequest,
-                       request: HttpServletRequest
+                       @AuthenticationPrincipal userDetails: UserDetails,
     ): Seller {
-        val authentication = SecurityContextHolder.getContext().authentication
-        val email = (authentication.principal as UserDetails).username
+        val email = userDetails.username
         return sellerService.changeToSeller(email!!, applyRequest)
     }
 

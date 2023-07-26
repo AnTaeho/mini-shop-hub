@@ -5,8 +5,7 @@ import com.example.minishophub.domain.user.controller.dto.request.UserJoinReques
 import com.example.minishophub.domain.user.controller.dto.request.UserUpdateRequest
 import com.example.minishophub.domain.user.controller.dto.response.UserResponse
 import com.example.minishophub.domain.user.service.BuyerService
-import jakarta.servlet.http.HttpServletRequest
-import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.web.bind.annotation.*
 
@@ -35,10 +34,9 @@ class BuyerController (
     }
 
     @PutMapping("/oauth")
-    fun updateOAuthInfo(request: HttpServletRequest, @RequestBody updateRequest: OAuth2UserUpdateRequest) {
-
-        val authentication = SecurityContextHolder.getContext().authentication
-        val email = (authentication.principal as UserDetails).username
+    fun updateOAuthInfo(@AuthenticationPrincipal userDetails: UserDetails,
+                        @RequestBody updateRequest: OAuth2UserUpdateRequest) {
+        val email = userDetails.username
         buyerService.updateOAuth2(updateRequest, email!!)
     }
 
