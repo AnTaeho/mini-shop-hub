@@ -36,7 +36,8 @@ class BuyerController (
 
     @PutMapping("/oauth")
     fun updateOAuthInfo(request: HttpServletRequest, @RequestBody updateRequest: OAuth2UserUpdateRequest) {
-        val email = jwtService.extractEmail(request)
+        val accessToken = jwtService.extractAccessToken(request)
+        val email = jwtService.extractEmail(accessToken)
         buyerService.updateOAuth2(updateRequest, email!!)
     }
 

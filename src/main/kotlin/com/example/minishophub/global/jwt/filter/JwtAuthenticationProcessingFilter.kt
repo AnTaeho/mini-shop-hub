@@ -79,7 +79,8 @@ class JwtAuthenticationProcessingFilter(
         response: HttpServletResponse,
         filterChain: FilterChain
     ) {
-        val email = jwtService.extractEmail(request)
+        val accessToken = jwtService.extractAccessToken(request)
+        val email = jwtService.extractEmail(accessToken)
         if (email != null) {
             val user = buyerRepository.findByEmail(email)
             saveAuthentication(user!!)
