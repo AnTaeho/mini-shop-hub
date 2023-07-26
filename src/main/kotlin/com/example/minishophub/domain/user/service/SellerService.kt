@@ -1,12 +1,12 @@
 package com.example.minishophub.domain.user.service
 
 import com.example.minishophub.domain.shop.persistence.Shop
-import com.example.minishophub.domain.shop.persistence.ShopRepository
 import com.example.minishophub.domain.user.controller.dto.request.SellerApplyRequest
 import com.example.minishophub.domain.user.controller.dto.request.UserUpdateRequest
 import com.example.minishophub.domain.user.persistence.seller.Seller
 import com.example.minishophub.domain.user.persistence.seller.SellerRepository
 import com.example.minishophub.domain.user.persistence.buyer.BuyerRepository
+import com.example.minishophub.global.util.fail
 import com.example.minishophub.global.util.findByIdOrThrow
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -16,13 +16,11 @@ import org.springframework.transaction.annotation.Transactional
 class SellerService(
     private val sellerRepository: SellerRepository,
     private val buyerRepository: BuyerRepository,
-    private val shopRepository: ShopRepository,
 ) {
 
-    // TODO : 유저 객체 검색 방식 수정 필요
     @Transactional
-    fun changeToSeller(userId: Long, applyRequest: SellerApplyRequest): Seller {
-        val owner = buyerRepository.findById(userId).get()
+    fun changeToSeller(email: String, applyRequest: SellerApplyRequest): Seller {
+        val owner = buyerRepository.findByEmail(email) ?: fail()
 
         val seller = Seller(
             email = owner.email,
@@ -46,8 +44,8 @@ class SellerService(
 
     // TODO : 중복적인 유효성 검사 추상화 하기
     @Transactional
-    fun update(seller: Long, updateRequest: UserUpdateRequest) {
-        val seller = sellerRepository.findByIdOrThrow(seller)
+    fun update(sellerId: Long, updateRequest: UserUpdateRequest) {
+        val seller = sellerRepository.findByIdOrThrow(sellerId)
 
         if (sellerRepository.findByEmail(updateRequest.email) != null) {
             throw IllegalArgumentException("이미 존재하는 이메일 입니다.")
