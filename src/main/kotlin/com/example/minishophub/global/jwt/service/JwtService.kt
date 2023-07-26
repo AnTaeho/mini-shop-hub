@@ -3,6 +3,7 @@ package com.example.minishophub.global.jwt.service
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import com.example.minishophub.domain.user.persistence.buyer.BuyerRepository
+import io.github.oshai.kotlinlogging.KotlinLogging
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.beans.factory.annotation.Value
@@ -36,6 +37,8 @@ class JwtService (
         const val EMAIL_CLAIM: String = "email"
         const val BEARER: String = "Bearer "
     }
+
+    private val log = KotlinLogging.logger { }
 
     /**
      * AccessToken 생성
@@ -134,12 +137,16 @@ class JwtService (
      * RefreshToken DB 저장(업데이트)
      */
     fun updateRefreshToken(email: String, refreshToken: String) {
+        log.info { "JwtService - updateRefreshToken 시작" }
+
         val findUser = buyerRepository.findByEmail(email)
         if (findUser == null) {
             throw IllegalArgumentException("일치하는 회원이 없습니다.")
         } else {
             findUser.updateRefreshToken(refreshToken)
         }
+
+        log.info { "JwtService - updateRefreshToken 종료" }
     }
 
     fun isTokenValid(token: String): Boolean {

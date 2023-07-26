@@ -4,6 +4,7 @@ import com.example.minishophub.domain.user.persistence.buyer.Buyer
 import com.example.minishophub.domain.user.persistence.buyer.BuyerRepository
 import com.example.minishophub.global.jwt.service.JwtService
 import com.example.minishophub.global.jwt.util.PasswordUtil
+import io.github.oshai.kotlinlogging.KotlinLogging
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -23,8 +24,10 @@ import org.springframework.web.filter.OncePerRequestFilter
 class JwtAuthenticationProcessingFilter(
     private val jwtService: JwtService,
     private val buyerRepository: BuyerRepository,
-    private val authoritiesMapper: GrantedAuthoritiesMapper = NullAuthoritiesMapper()
+    private val authoritiesMapper: GrantedAuthoritiesMapper = NullAuthoritiesMapper(),
 ) : OncePerRequestFilter() {
+
+    private val log = KotlinLogging.logger { }
 
     companion object {
         const val NO_CHECK_URL = "/login"
@@ -56,6 +59,8 @@ class JwtAuthenticationProcessingFilter(
      */
     private fun checkRefreshTokenAndReIssueAccessToken(response: HttpServletResponse,
                                                        refreshToken: String) {
+        log.info { "JwtAuthenticationProcessingFilter - checkRefreshTokenAndReIssueAccessToken 시작" }
+
         val user = buyerRepository.findByRefreshToken(refreshToken)
         if (user != null) {
             val reIssueRefreshToken = reIssueRefreshToken(user)
@@ -65,12 +70,18 @@ class JwtAuthenticationProcessingFilter(
                 reIssueRefreshToken
             )
         }
+
+        log.info { "JwtAuthenticationProcessingFilter - checkRefreshTokenAndReIssueAccessToken 종료" }
     }
 
     private fun reIssueRefreshToken(buyer: Buyer): String {
+        log.info { "JwtAuthenticationProcessingFilter - reIssueRefreshToken 시작" }
+
         val reIssuedRefreshToken = jwtService.createRefreshToken()
         buyer.updateRefreshToken(reIssuedRefreshToken)
         buyerRepository.saveAndFlush(buyer)
+
+        log.info { "JwtAuthenticationProcessingFilter - reIssueRefreshToken 종료" }
         return reIssuedRefreshToken
     }
 
@@ -79,12 +90,16 @@ class JwtAuthenticationProcessingFilter(
         response: HttpServletResponse,
         filterChain: FilterChain
     ) {
+        log.info { "JwtAuthenticationProcessingFilter - checkAccessTokenAndAuthentication 시작" }
+
         val accessToken = jwtService.extractAccessToken(request)
         val email = jwtService.extractEmail(accessToken)
         if (email != null) {
             val user = buyerRepository.findByEmail(email)
             saveAuthentication(user!!)
         }
+
+        log.info { "JwtAuthenticationProcessingFilter - checkAccessTokenAndAuthentication 종료" }
         filterChain.doFilter(request, response)
     }
 
