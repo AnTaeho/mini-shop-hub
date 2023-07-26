@@ -25,6 +25,7 @@ class ItemService(
             quantity = registerRequest.quantity,
             shop = shop
         )
+        shop.addItem(item)
         return itemRepository.save(item)
     }
 

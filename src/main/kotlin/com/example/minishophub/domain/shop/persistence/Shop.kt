@@ -20,6 +20,10 @@ class Shop(
     val itemList: MutableList<Item> = mutableListOf(),
 ) : BaseEntity() {
 
+    fun addItem(item: Item) {
+        this.itemList.add(item)
+    }
+
     companion object {
         fun defaultShop(ownerId: Long): Shop {
             return Shop(
