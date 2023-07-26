@@ -19,6 +19,8 @@ class Seller (
     var city: String,
     var socialId: String? = null,
     var refreshToken: String? = null,
+
+    // 사업자 번호 발급 받는 방법에 따라 구현이 바껴야 할 수도 있다.
     var businessRegistrationNumber: String,
 
     @Enumerated(EnumType.STRING)
@@ -35,6 +37,9 @@ class Seller (
     }
 
     fun registerShop(shop: Shop) {
+        if (shop.businessRegistrationNumber != this.businessRegistrationNumber) {
+            throw IllegalArgumentException("사업자 번호가 일치하지 않습니다.")
+        }
         this.myShop = shop
         this.role = UserRole.SELLER_AUTHENTICATION_DONE
     }
