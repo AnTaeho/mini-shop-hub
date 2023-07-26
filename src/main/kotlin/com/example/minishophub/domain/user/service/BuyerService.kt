@@ -1,11 +1,15 @@
 package com.example.minishophub.domain.user.service
 
+import com.example.minishophub.domain.shop.persistence.ShopRepository
 import com.example.minishophub.domain.user.controller.dto.request.OAuth2UserUpdateRequest
 import com.example.minishophub.domain.user.controller.dto.request.UserJoinRequest
 import com.example.minishophub.domain.user.controller.dto.request.UserUpdateRequest
 import com.example.minishophub.domain.user.persistence.buyer.Buyer
 import com.example.minishophub.domain.user.persistence.buyer.BuyerRepository
 import com.example.minishophub.domain.user.persistence.UserRole
+import com.example.minishophub.domain.user.persistence.follow.Follow
+import com.example.minishophub.domain.user.persistence.follow.FollowRepository
+import com.example.minishophub.global.util.fail
 import com.example.minishophub.global.util.findByIdOrThrow
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
@@ -16,6 +20,8 @@ import org.springframework.transaction.annotation.Transactional
 class BuyerService (
     private val buyerRepository: BuyerRepository,
     private val passwordEncoder: PasswordEncoder,
+    private val shopRepository: ShopRepository,
+    private val followRepository: FollowRepository,
 ) {
 
     @Transactional
@@ -60,6 +66,21 @@ class BuyerService (
     fun updateOAuth2(updateRequest: OAuth2UserUpdateRequest, email: String) {
         val user = buyerRepository.findByEmail(email)!!
         user.updateOAuth(updateRequest)
+    }
+
+    @Transactional
+    fun followShop(shopId: Long, email: String) {
+        val followedShop = shopRepository.findById(shopId).get()
+        val follower = buyerRepository.findByEmail(email) ?: fail()
+
+        if (followRepository.existsByBuyerAndShop(follower, followedShop)) {
+            followRepository.deleteByBuyerAndShop(follower, followedShop)
+            return
+        }
+        followRepository.save(Follow(
+            buyer = follower,
+            shop = followedShop
+        ))
     }
 
     private fun checkEmail(email: String) {

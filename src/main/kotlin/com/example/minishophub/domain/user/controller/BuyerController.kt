@@ -20,6 +20,13 @@ class BuyerController (
         return "회원 가입 성공"
     }
 
+    @PostMapping("/follow/{shopId}")
+    fun followShop(@PathVariable shopId: Long,
+                   @AuthenticationPrincipal userDetails: UserDetails,
+    ) {
+        buyerService.followShop(shopId, userDetails.username)
+    }
+
     @GetMapping("/user/{userId}")
     fun findUser(@PathVariable userId: Long): UserResponse {
         val find = buyerService.find(userId)
