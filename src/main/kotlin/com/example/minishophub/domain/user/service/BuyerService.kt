@@ -6,7 +6,6 @@ import com.example.minishophub.domain.user.controller.dto.request.UserUpdateRequ
 import com.example.minishophub.domain.user.persistence.buyer.Buyer
 import com.example.minishophub.domain.user.persistence.buyer.BuyerRepository
 import com.example.minishophub.domain.user.persistence.UserRole
-import com.example.minishophub.global.jwt.service.JwtService
 import com.example.minishophub.global.util.findByIdOrThrow
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
@@ -22,12 +21,8 @@ class BuyerService (
     @Transactional
     fun join(joinRequest: UserJoinRequest) {
 
-        if (buyerRepository.findByEmail(joinRequest.email) != null) {
-            throw IllegalArgumentException("이미 존재하는 이메일 입니다.")
-        }
-        if (buyerRepository.findByNickname(joinRequest.nickname) != null) {
-            throw IllegalArgumentException("이미 존재하는 닉네임 입니다.")
-        }
+        checkEmail(joinRequest.email)
+        checkNickname(joinRequest.nickname)
 
         val buyer = Buyer(
             email = joinRequest.email,
@@ -50,12 +45,8 @@ class BuyerService (
     fun update(userId: Long, updateRequest: UserUpdateRequest) {
         val user = buyerRepository.findByIdOrThrow(userId)
 
-        if (buyerRepository.findByEmail(updateRequest.email) != null) {
-            throw IllegalArgumentException("이미 존재하는 이메일 입니다.")
-        }
-        if (buyerRepository.findByNickname(updateRequest.nickname) != null) {
-            throw IllegalArgumentException("이미 존재하는 닉네임 입니다.")
-        }
+        checkEmail(updateRequest.email)
+        checkNickname(updateRequest.nickname)
 
         user.update(updateRequest)
     }
@@ -70,5 +61,18 @@ class BuyerService (
         val user = buyerRepository.findByEmail(email)!!
         user.updateOAuth(updateRequest)
     }
+
+    private fun checkEmail(email: String) {
+        if (buyerRepository.existsByEmail(email)) {
+            throw IllegalArgumentException("이미 존재하는 이메일 입니다.")
+        }
+    }
+
+    private fun checkNickname(nickname: String) {
+        if (buyerRepository.existsByNickname(nickname)) {
+            throw IllegalArgumentException("이미 존재하는 닉네임 입니다.")
+        }
+    }
+
 
 }

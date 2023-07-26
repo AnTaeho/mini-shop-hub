@@ -38,24 +38,29 @@ class SellerService(
         return sellerRepository.save(seller)
     }
 
-    fun makeCoupon(): String = "쿠폰 발급"
-
     fun find(sellerId: Long): Seller = sellerRepository.findById(sellerId).get()
 
-    // TODO : 중복적인 유효성 검사 추상화 하기
     @Transactional
     fun update(sellerId: Long, updateRequest: UserUpdateRequest) {
         val seller = sellerRepository.findByIdOrThrow(sellerId)
 
-        if (sellerRepository.findByEmail(updateRequest.email) != null) {
-            throw IllegalArgumentException("이미 존재하는 이메일 입니다.")
-        }
-        if (sellerRepository.findByNickname(updateRequest.nickname) != null) {
-            throw IllegalArgumentException("이미 존재하는 닉네임 입니다.")
-        }
+        checkEmail(updateRequest.email)
+        checkNickname(updateRequest.nickname)
 
         seller.update(updateRequest)
 
+    }
+
+    private fun checkEmail(email: String) {
+        if (buyerRepository.existsByEmail(email)) {
+            throw IllegalArgumentException("이미 존재하는 이메일 입니다.")
+        }
+    }
+
+    private fun checkNickname(nickname: String) {
+        if (buyerRepository.existsByNickname(nickname)) {
+            throw IllegalArgumentException("이미 존재하는 닉네임 입니다.")
+        }
     }
 
     fun deleteSeller(sellerId: Long) = sellerRepository.deleteById(sellerId)

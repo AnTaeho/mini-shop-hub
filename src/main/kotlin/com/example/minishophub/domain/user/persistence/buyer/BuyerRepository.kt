@@ -5,7 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface BuyerRepository : JpaRepository<Buyer, Long> {
     fun findByEmail(email: String): Buyer?
-    fun findByNickname(nickname: String): Buyer?
     fun findByRefreshToken(refreshToken: String): Buyer?
+    fun existsByEmail(email: String): Boolean
+    fun existsByNickname(nickname: String): Boolean
     fun findBySocialTypeAndSocialId(socialType: SocialType, socialId: String): Buyer?
 }
