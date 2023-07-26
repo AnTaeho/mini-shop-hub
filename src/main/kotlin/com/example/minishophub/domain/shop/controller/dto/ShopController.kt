@@ -10,17 +10,15 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/shop")
 class ShopController(
     private val shopService: ShopService,
     private val jwtService: JwtService,
 ) {
 
-    @PostMapping
+    @PostMapping("/owner/shop")
     fun registerShop(@RequestBody registerRequest: ShopRegisterRequest,
                      request: HttpServletRequest
     ): Shop {
@@ -29,7 +27,7 @@ class ShopController(
         return shopService.registerShop(registerRequest, email!!)
     }
 
-    @GetMapping("/{shopId}")
+    @GetMapping("/shop/{shopId}")
     fun findShop1(@PathVariable shopId: Long): Shop = shopService.findShop(shopId)
 
     @GetMapping("/owner/{bizNumber}")

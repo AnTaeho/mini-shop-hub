@@ -1,5 +1,6 @@
 package com.example.minishophub.global.config
 
+import com.example.minishophub.domain.user.persistence.UserRole
 import com.example.minishophub.domain.user.persistence.buyer.BuyerRepository
 import com.example.minishophub.global.jwt.filter.JwtAuthenticationProcessingFilter
 import com.example.minishophub.global.jwt.service.JwtService
@@ -50,6 +51,8 @@ class SecurityConfig (
             .authorizeHttpRequests {
                 it.requestMatchers("/","/css/**","/images/**","/js/**","/favicon.ico","/h2-console/**").permitAll()
                 it.requestMatchers("/sign-up").permitAll()
+                it.requestMatchers("/owner/**").hasRole(UserRole.SELLER_AUTHENTICATION_DONE.name)
+                it.requestMatchers("/admin/**").hasRole(UserRole.ADMIN.name)
                 it.anyRequest().authenticated()
             }
             .oauth2Login {

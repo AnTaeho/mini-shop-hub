@@ -7,27 +7,27 @@ import com.example.minishophub.domain.item.service.ItemService
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/item")
+@RequestMapping
 class ItemController(
     private val itemService: ItemService,
 ) {
 
-    @PostMapping("/{shopId}")
+    @PostMapping("/owner/{shopId}")
     fun registerItem(@RequestBody registerRequest: ItemRegisterRequest,
                      @PathVariable shopId: Long,
     ): Item  = itemService.registerItem(registerRequest, shopId)
 
-    @GetMapping("/search")
+    @GetMapping("/item/search")
     fun searchCategory(@RequestBody category: Category): MutableList<Item> = itemService.searchCategory(category)
 
-    @GetMapping("/{itemId}")
+    @GetMapping("/item/{itemId}")
     fun findItem(@PathVariable itemId: Long): Item = itemService.findItem(itemId)
 
-    @PutMapping("/plus/{itemId}")
+    @PutMapping("/owner/plus/{itemId}")
     fun reStock(@PathVariable itemId: Long,
                 @RequestBody count: Int) = itemService.reStockItem(itemId, count)
 
-    @PutMapping("/minus/{itemId}")
+    @PutMapping("/owner/minus/{itemId}")
     fun sell(@PathVariable itemId: Long,
                 @RequestBody count: Int) = itemService.sellItem(itemId, count)
 
