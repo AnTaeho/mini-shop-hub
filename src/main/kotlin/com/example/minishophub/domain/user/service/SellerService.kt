@@ -3,6 +3,7 @@ package com.example.minishophub.domain.user.service
 import com.example.minishophub.domain.shop.persistence.Shop
 import com.example.minishophub.domain.user.controller.dto.request.SellerApplyRequest
 import com.example.minishophub.domain.user.controller.dto.request.UserUpdateRequest
+import com.example.minishophub.domain.user.persistence.UserRole
 import com.example.minishophub.domain.user.persistence.seller.Seller
 import com.example.minishophub.domain.user.persistence.seller.SellerRepository
 import com.example.minishophub.domain.user.persistence.buyer.BuyerRepository
@@ -21,7 +22,9 @@ class SellerService(
     @Transactional
     fun changeToSeller(email: String, applyRequest: SellerApplyRequest): Seller {
         val owner = buyerRepository.findByEmail(email) ?: fail()
-
+        if (owner.role != UserRole.USER) {
+            throw IllegalArgumentException("추가 인증이 안되어 있는 유저 입니다.")
+        }
         val seller = Seller(
             email = owner.email,
             password = owner.password,
@@ -34,6 +37,8 @@ class SellerService(
             businessRegistrationNumber = applyRequest.businessRegistrationNumber,
             myShop = Shop.defaultShop(owner.id)
         )
+
+        buyerRepository.deleteById(owner.id)
 
         return sellerRepository.save(seller)
     }
