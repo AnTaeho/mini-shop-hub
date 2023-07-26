@@ -1,14 +1,16 @@
-package com.example.minishophub.domain.user.persistence
+package com.example.minishophub.domain.user.persistence.buyer
 
 import com.example.minishophub.domain.base.BaseEntity
 import com.example.minishophub.domain.user.controller.dto.request.OAuth2UserUpdateRequest
 import com.example.minishophub.domain.user.controller.dto.request.UserUpdateRequest
+import com.example.minishophub.domain.user.persistence.SocialType
+import com.example.minishophub.domain.user.persistence.UserRole
 import jakarta.persistence.*
 import org.springframework.security.crypto.password.PasswordEncoder
 
 @Entity
-@Table(name = "USERS")
-class User(
+@Table(name = "BUYER")
+class Buyer(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     var id: Long = 0L,
@@ -19,15 +21,15 @@ class User(
     var age: Int,
     var city: String,
     var socialId: String? = null,
-    private var refreshToken: String? = null,
+    var refreshToken: String? = null,
 
     @Enumerated(EnumType.STRING)
     var role: UserRole = UserRole.GUEST,
 
     @Enumerated(EnumType.STRING)
-    var socialType: SocialType? = null,
+    var socialType: SocialType = SocialType.NO_SOCIAL,
+) : BaseEntity() {
 
-    ) : BaseEntity() {
     private fun authorizeUser() {
         this.role = UserRole.USER
     }
@@ -54,8 +56,8 @@ class User(
     }
 
     companion object {
-        fun fixture(): User {
-            return User(
+        fun fixture(): Buyer {
+            return Buyer(
                 email = "fixture@naver.com",
                 password = "password",
                 nickname = "nickname",

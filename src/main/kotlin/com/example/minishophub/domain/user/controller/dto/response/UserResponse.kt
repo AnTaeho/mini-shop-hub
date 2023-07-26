@@ -1,6 +1,6 @@
 package com.example.minishophub.domain.user.controller.dto.response
 
-import com.example.minishophub.domain.user.persistence.User
+import com.example.minishophub.domain.user.persistence.buyer.Buyer
 import com.example.minishophub.domain.user.persistence.UserRole
 
 data class UserResponse(
@@ -12,14 +12,14 @@ data class UserResponse(
     val role: UserRole,
 ) {
     companion object {
-        fun of(user: User): UserResponse {
+        fun of(buyer: Buyer): UserResponse {
             return UserResponse(
-                userId = user.id!!,
-                nickname = user.nickname,
-                email = user.email,
-                age = user.age,
-                city = user.city,
-                role = user.role
+                userId = buyer.id!!,
+                nickname = buyer.nickname,
+                email = buyer.email,
+                age = buyer.age,
+                city = buyer.city,
+                role = buyer.role
             )
         }
     }

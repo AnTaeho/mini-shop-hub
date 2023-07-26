@@ -2,9 +2,9 @@ package com.example.minishophub.service.user
 
 import com.example.minishophub.domain.user.controller.dto.request.UserJoinRequest
 import com.example.minishophub.domain.user.controller.dto.request.UserUpdateRequest
-import com.example.minishophub.domain.user.persistence.User
-import com.example.minishophub.domain.user.persistence.UserRepository
-import com.example.minishophub.domain.user.service.UserService
+import com.example.minishophub.domain.user.persistence.buyer.Buyer
+import com.example.minishophub.domain.user.persistence.buyer.BuyerRepository
+import com.example.minishophub.domain.user.service.BuyerService
 import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.DisplayName
@@ -14,14 +14,14 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 
 @SpringBootTest
-class UserServiceTest @Autowired constructor(
-    private val userService: UserService,
-    private val userRepository: UserRepository,
+class BuyerServiceTest @Autowired constructor(
+    private val buyerService: BuyerService,
+    private val buyerRepository: BuyerRepository,
 ) {
 
     @AfterEach
     fun clear() {
-        userRepository.deleteAll()
+        buyerRepository.deleteAll()
     }
 
     @Test
@@ -37,10 +37,10 @@ class UserServiceTest @Autowired constructor(
         )
 
         //when
-        userService.join(joinRequest)
+        buyerService.join(joinRequest)
 
         //then
-        val result = userRepository.findAll()
+        val result = buyerRepository.findAll()
         assertThat(result.size).isEqualTo(1)
         assertThat(result[0].email).isEqualTo("test@naver.com")
         assertThat(result[0].nickname).isEqualTo("test1")
@@ -59,7 +59,7 @@ class UserServiceTest @Autowired constructor(
             26,
             "seoul"
         )
-        userService.join(joinRequest)
+        buyerService.join(joinRequest)
 
         //when & then
         val joinRequest2 = UserJoinRequest(
@@ -71,7 +71,7 @@ class UserServiceTest @Autowired constructor(
         )
 
         val message = assertThrows<IllegalArgumentException> {
-            userService.join(joinRequest2)
+            buyerService.join(joinRequest2)
         }.message
 
         assertThat(message).isEqualTo("이미 존재하는 이메일 입니다.")
@@ -88,7 +88,7 @@ class UserServiceTest @Autowired constructor(
             26,
             "seoul"
         )
-        userService.join(joinRequest)
+        buyerService.join(joinRequest)
 
         //when & then
         val joinRequest2 = UserJoinRequest(
@@ -100,7 +100,7 @@ class UserServiceTest @Autowired constructor(
         )
 
         val message = assertThrows<IllegalArgumentException> {
-            userService.join(joinRequest2)
+            buyerService.join(joinRequest2)
         }.message
 
         assertThat(message).isEqualTo("이미 존재하는 닉네임 입니다.")
@@ -110,11 +110,11 @@ class UserServiceTest @Autowired constructor(
     @DisplayName("유저 조회 성공")
     fun findUserTest() {
         //given
-        val user = User.fixture()
-        val savedUser = userRepository.save(user)
+        val buyer = Buyer.fixture()
+        val savedUser = buyerRepository.save(buyer)
 
         //when
-        val findUser = userService.find(savedUser.id!!)
+        val findUser = buyerService.find(savedUser.id!!)
 
         //then
         assertThat(savedUser.email).isEqualTo(findUser.email)
@@ -128,12 +128,12 @@ class UserServiceTest @Autowired constructor(
     @DisplayName("유저 조회 실패")
     fun findFailTest() {
         //given
-        val user = User.fixture()
-        val savedUser = userRepository.save(user)
+        val buyer = Buyer.fixture()
+        val savedUser = buyerRepository.save(buyer)
 
         //when & then
         val message = assertThrows<IllegalArgumentException> {
-            userService.find(savedUser.id!!+1L)
+            buyerService.find(savedUser.id!!+1L)
         }.message
         assertThat(message).isEqualTo("존재하지 않는 유저 입니다.")
     }
@@ -142,8 +142,8 @@ class UserServiceTest @Autowired constructor(
     @DisplayName("유저 수정 성공")
     fun updateTest() {
         //given
-        val user = User.fixture()
-        val savedUser = userRepository.save(user)
+        val buyer = Buyer.fixture()
+        val savedUser = buyerRepository.save(buyer)
 
         val updateRequest = UserUpdateRequest(
             email = "update@naver.com",
@@ -154,10 +154,10 @@ class UserServiceTest @Autowired constructor(
 
         //when
         val id = savedUser.id!!
-        userService.update(id, updateRequest)
+        buyerService.update(id, updateRequest)
 
         //then
-        val findUser = userService.find(id)
+        val findUser = buyerService.find(id)
         assertThat(findUser.email).isEqualTo("update@naver.com")
         assertThat(findUser.nickname).isEqualTo("update")
         assertThat(findUser.age).isEqualTo(24)
@@ -168,8 +168,8 @@ class UserServiceTest @Autowired constructor(
     @DisplayName("회원 수정 실패 - 닉네임 중복")
     fun updateFailTest1() {
         //given
-        val user = User.fixture()
-        val savedUser = userRepository.save(user)
+        val buyer = Buyer.fixture()
+        val savedUser = buyerRepository.save(buyer)
 
         val updateRequest = UserUpdateRequest(
             email = "update@naver.com",
@@ -181,7 +181,7 @@ class UserServiceTest @Autowired constructor(
         //when & then
 
         val message = assertThrows<IllegalArgumentException> {
-            userService.update(savedUser.id!!, updateRequest)
+            buyerService.update(savedUser.id!!, updateRequest)
         }.message
 
         assertThat(message).isEqualTo("이미 존재하는 닉네임 입니다.")
@@ -191,8 +191,8 @@ class UserServiceTest @Autowired constructor(
     @DisplayName("회원 수정 실패 - 이메일 중복")
     fun updateFailTest2() {
         //given
-        val user = User.fixture()
-        val savedUser = userRepository.save(user)
+        val buyer = Buyer.fixture()
+        val savedUser = buyerRepository.save(buyer)
 
         val updateRequest = UserUpdateRequest(
             email = "fixture@naver.com",
@@ -204,7 +204,7 @@ class UserServiceTest @Autowired constructor(
         //when & then
 
         val message = assertThrows<IllegalArgumentException> {
-            userService.update(savedUser.id!!, updateRequest)
+            buyerService.update(savedUser.id!!, updateRequest)
         }.message
 
         assertThat(message).isEqualTo("이미 존재하는 이메일 입니다.")
@@ -214,13 +214,13 @@ class UserServiceTest @Autowired constructor(
     @DisplayName("회원 삭제")
     fun deleteUserTest() {
         //given
-        val savedUser = userRepository.save(User.fixture())
+        val savedBuyer = buyerRepository.save(Buyer.fixture())
 
         //when
-        userService.delete(savedUser.id!!)
+        buyerService.delete(savedBuyer.id!!)
 
         //then
-        val result = userRepository.findAll()
+        val result = buyerRepository.findAll()
         assertThat(result).isEmpty()
     }
 

@@ -2,7 +2,6 @@ package com.example.minishophub.domain.shop.persistence
 
 import com.example.minishophub.domain.base.BaseEntity
 import com.example.minishophub.domain.item.persistence.Item
-import com.example.minishophub.domain.user.persistence.User
 import jakarta.persistence.*
 
 @Entity
@@ -15,11 +14,21 @@ class Shop(
     val location: String,
     val businessRegistrationNumber: String,
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "owner_id")
-    val owner: User,
+    var ownerId: Long,
 
     @OneToMany(mappedBy = "shop", cascade = [CascadeType.ALL], orphanRemoval = true)
     val itemList: MutableList<Item> = mutableListOf(),
+) : BaseEntity() {
 
-    ) : BaseEntity()
+    companion object {
+        fun defaultShop(ownerId: Long): Shop {
+            return Shop(
+                name = "no-name",
+                location = "no-location",
+                businessRegistrationNumber = "no-number",
+                ownerId = ownerId
+            )
+        }
+    }
+
+}

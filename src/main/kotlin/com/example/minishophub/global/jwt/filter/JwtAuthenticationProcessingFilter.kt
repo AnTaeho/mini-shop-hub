@@ -1,7 +1,7 @@
 package com.example.minishophub.global.jwt.filter
 
-import com.example.minishophub.domain.user.persistence.User
-import com.example.minishophub.domain.user.persistence.UserRepository
+import com.example.minishophub.domain.user.persistence.buyer.Buyer
+import com.example.minishophub.domain.user.persistence.buyer.BuyerRepository
 import com.example.minishophub.global.jwt.service.JwtService
 import com.example.minishophub.global.jwt.util.PasswordUtil
 import jakarta.servlet.FilterChain
@@ -22,7 +22,7 @@ import org.springframework.web.filter.OncePerRequestFilter
  */
 class JwtAuthenticationProcessingFilter(
     private val jwtService: JwtService,
-    private val userRepository: UserRepository,
+    private val buyerRepository: BuyerRepository,
     private val authoritiesMapper: GrantedAuthoritiesMapper = NullAuthoritiesMapper()
 ) : OncePerRequestFilter() {
 
@@ -56,7 +56,7 @@ class JwtAuthenticationProcessingFilter(
      */
     private fun checkRefreshTokenAndReIssueAccessToken(response: HttpServletResponse,
                                                        refreshToken: String) {
-        val user = userRepository.findByRefreshToken(refreshToken)
+        val user = buyerRepository.findByRefreshToken(refreshToken)
         if (user != null) {
             val reIssueRefreshToken = reIssueRefreshToken(user)
             jwtService.sendAccessAndRefreshToken(
@@ -67,10 +67,10 @@ class JwtAuthenticationProcessingFilter(
         }
     }
 
-    private fun reIssueRefreshToken(user: User): String {
+    private fun reIssueRefreshToken(buyer: Buyer): String {
         val reIssuedRefreshToken = jwtService.createRefreshToken()
-        user.updateRefreshToken(reIssuedRefreshToken)
-        userRepository.saveAndFlush(user)
+        buyer.updateRefreshToken(reIssuedRefreshToken)
+        buyerRepository.saveAndFlush(buyer)
         return reIssuedRefreshToken
     }
 
@@ -81,19 +81,19 @@ class JwtAuthenticationProcessingFilter(
     ) {
         val email = jwtService.extractEmail(request)
         if (email != null) {
-            val user = userRepository.findByEmail(email)
+            val user = buyerRepository.findByEmail(email)
             saveAuthentication(user!!)
         }
         filterChain.doFilter(request, response)
     }
 
-    private fun saveAuthentication(user: User) {
+    private fun saveAuthentication(buyer: Buyer) {
         val password: String = PasswordUtil.generateRandomPassword()
 
         val userDetailsUser = org.springframework.security.core.userdetails.User.builder()
-            .username(user.email)
+            .username(buyer.email)
             .password(password)
-            .roles(user.role.name)
+            .roles(buyer.role.name)
             .build()
 
         val authentication = UsernamePasswordAuthenticationToken(

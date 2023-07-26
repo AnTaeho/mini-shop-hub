@@ -1,13 +1,10 @@
 package com.example.minishophub.global.oauth
 
 import com.example.minishophub.domain.user.persistence.SocialType
-import com.example.minishophub.domain.user.persistence.User
+import com.example.minishophub.domain.user.persistence.SocialType.*
+import com.example.minishophub.domain.user.persistence.buyer.Buyer
 import com.example.minishophub.domain.user.persistence.UserRole
-import com.example.minishophub.global.oauth.userInfo.GoogleOAuth2UserInfo
-import com.example.minishophub.global.oauth.userInfo.KakaoOAuth2UserInfo
-import com.example.minishophub.global.oauth.userInfo.NaverOAuth2UserInfo
-import com.example.minishophub.global.oauth.userInfo.OAuth2UserInfo
-import java.util.UUID
+import com.example.minishophub.global.oauth.userInfo.*
 
 /**
  * 각 소셜 별로 다르게 들어오는 정보를 처리하는 클래스
@@ -26,9 +23,10 @@ class OAuthAttributes(
                attributes: MutableMap<String, Any>
         ): OAuthAttributes {
             return when (socialType) {
-                SocialType.NAVER -> ofNaver(userNameAttributeName, attributes)
-                SocialType.KAKAO -> ofKakao(userNameAttributeName, attributes)
-                SocialType.GOOGLE -> ofGoogle(userNameAttributeName, attributes)
+                NAVER -> ofNaver(userNameAttributeName, attributes)
+                KAKAO -> ofKakao(userNameAttributeName, attributes)
+                GOOGLE -> ofGoogle(userNameAttributeName, attributes)
+                NO_SOCIAL -> ofNothing(userNameAttributeName, attributes)
             }
         }
 
@@ -53,14 +51,21 @@ class OAuthAttributes(
                 GoogleOAuth2UserInfo(attributes)
             )
         }
+
+        private fun ofNothing(userNameAttributeName: String, attributes: MutableMap<String, Any>):  OAuthAttributes{
+            return OAuthAttributes(
+                userNameAttributeName,
+                NoSocialOAuth2UserInfo(attributes)
+            )
+        }
     }
 
     /**
      * ofXXX 메서드로 OAuthAttribute 객체가 생성 되었고, 유저 정보가 담긴 OAuth2UserInfo 가 주입 된 상태
      * OAuth2UserInfo 에서 정보를 가져와 User Entity 반환
      */
-    fun toEntity(socialType: SocialType, oAuth2UserInfo: OAuth2UserInfo): User {
-        return User(
+    fun toEntity(socialType: SocialType, oAuth2UserInfo: OAuth2UserInfo): Buyer {
+        return Buyer(
             nickname = oAuth2UserInfo.getNickname()!!,
             socialId = oAuth2UserInfo.getId()!!,
             socialType = socialType,

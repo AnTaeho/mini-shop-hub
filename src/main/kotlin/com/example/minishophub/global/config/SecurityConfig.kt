@@ -1,6 +1,6 @@
 package com.example.minishophub.global.config
 
-import com.example.minishophub.domain.user.persistence.UserRepository
+import com.example.minishophub.domain.user.persistence.buyer.BuyerRepository
 import com.example.minishophub.global.jwt.filter.JwtAuthenticationProcessingFilter
 import com.example.minishophub.global.jwt.service.JwtService
 import com.example.minishophub.global.login.filter.CustomJsonUsernamePasswordAuthenticationFilter
@@ -33,7 +33,7 @@ class SecurityConfig (
 
     private val loginService: LoginService,
     private val jwtService: JwtService,
-    private val userRepository: UserRepository,
+    private val buyerRepository: BuyerRepository,
     private val objectMapper: ObjectMapper,
     private val oAuth2LoginSuccessHandler: OAuth2LoginSuccessHandler,
     private val oAuth2LoginFailureHandler: OAuth2LoginFailureHandler,
@@ -79,7 +79,7 @@ class SecurityConfig (
 
     @Bean
     fun loginSuccessHandler(): LoginSuccessHandler? {
-        return LoginSuccessHandler(jwtService, userRepository)
+        return LoginSuccessHandler(jwtService, buyerRepository)
     }
 
     /**
@@ -101,6 +101,6 @@ class SecurityConfig (
 
     @Bean
     fun jwtAuthenticationProcessingFilter(): JwtAuthenticationProcessingFilter? {
-        return JwtAuthenticationProcessingFilter(jwtService, userRepository)
+        return JwtAuthenticationProcessingFilter(jwtService, buyerRepository)
     }
 }

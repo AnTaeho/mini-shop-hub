@@ -1,6 +1,6 @@
 package com.example.minishophub.global.login.handler
 
-import com.example.minishophub.domain.user.persistence.UserRepository
+import com.example.minishophub.domain.user.persistence.buyer.BuyerRepository
 import com.example.minishophub.global.jwt.service.JwtService
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -10,7 +10,7 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 
 class LoginSuccessHandler(
     private val jwtService: JwtService,
-    private val userRepository: UserRepository,
+    private val buyerRepository: BuyerRepository,
 ) : SimpleUrlAuthenticationSuccessHandler() {
 
     override fun onAuthenticationSuccess(
@@ -24,10 +24,10 @@ class LoginSuccessHandler(
 
         jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken)
 
-        val user = userRepository.findByEmail(email)
+        val user = buyerRepository.findByEmail(email)
         if (user != null) {
             user.updateRefreshToken(refreshToken)
-            userRepository.saveAndFlush(user)
+            buyerRepository.saveAndFlush(user)
         }
 
         println("로그인에 성공했습니다. 이메일 : $email")

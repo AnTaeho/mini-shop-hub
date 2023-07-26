@@ -1,8 +1,8 @@
 package com.example.minishophub.global.oauth.service
 
 import com.example.minishophub.domain.user.persistence.SocialType
-import com.example.minishophub.domain.user.persistence.User
-import com.example.minishophub.domain.user.persistence.UserRepository
+import com.example.minishophub.domain.user.persistence.buyer.Buyer
+import com.example.minishophub.domain.user.persistence.buyer.BuyerRepository
 import com.example.minishophub.global.oauth.CustomOAuth2User
 import com.example.minishophub.global.oauth.OAuthAttributes
 import org.springframework.security.core.authority.SimpleGrantedAuthority
@@ -15,7 +15,7 @@ import java.util.Collections
 
 @Service
 class CustomOAuth2UserService(
-    private val userRepository: UserRepository,
+    private val buyerRepository: BuyerRepository,
 ) : OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
     companion object {
@@ -32,14 +32,14 @@ class CustomOAuth2UserService(
             userRequest.clientRegistration.providerDetails.userInfoEndpoint.userNameAttributeName
         val attributes = oAuth2User.attributes
         val extractAttributes = OAuthAttributes.of(socialType, userNameAttributeName, attributes)
-        val createUser: User = getUser(extractAttributes, socialType)
+        val createBuyer: Buyer = getUser(extractAttributes, socialType)
 
         return CustomOAuth2User(
-            Collections.singleton(SimpleGrantedAuthority(createUser.role.key)),
+            Collections.singleton(SimpleGrantedAuthority(createBuyer.role.key)),
             attributes,
             extractAttributes.nameAttributeKey,
-            createUser.email,
-            createUser.role
+            createBuyer.email,
+            createBuyer.role
         )
     }
 
@@ -51,16 +51,16 @@ class CustomOAuth2UserService(
         }
     }
 
-    private fun getUser(attributes: OAuthAttributes, socialType: SocialType): User {
-        return userRepository.findBySocialTypeAndSocialId(
+    private fun getUser(attributes: OAuthAttributes, socialType: SocialType): Buyer {
+        return buyerRepository.findBySocialTypeAndSocialId(
             socialType,
             attributes.oAuth2UserInfo.getId()!!
         ) ?: return saveUser(attributes, socialType)
     }
 
-    private fun saveUser(attributes: OAuthAttributes, socialType: SocialType): User {
+    private fun saveUser(attributes: OAuthAttributes, socialType: SocialType): Buyer {
         val createUser = attributes.toEntity(socialType, attributes.oAuth2UserInfo)
-        return userRepository.save(createUser)
+        return buyerRepository.save(createUser)
     }
 
 }
