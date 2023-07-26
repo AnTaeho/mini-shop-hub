@@ -95,8 +95,8 @@ class JwtAuthenticationProcessingFilter(
         val accessToken = jwtService.extractAccessToken(request)
         val email = jwtService.extractEmail(accessToken)
         if (email != null) {
-            val user = buyerRepository.findByEmail(email)
-            saveAuthentication(user!!)
+            val buyer = buyerRepository.findByEmail(email)
+            saveAuthentication(buyer!!)
         }
 
         log.info { "JwtAuthenticationProcessingFilter - checkAccessTokenAndAuthentication 종료" }
