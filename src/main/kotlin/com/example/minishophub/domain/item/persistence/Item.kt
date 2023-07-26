@@ -1,5 +1,6 @@
-package com.example.minishophub.domain.shop
+package com.example.minishophub.domain.item.persistence
 
+import com.example.minishophub.domain.shop.persistence.Shop
 import jakarta.persistence.*
 
 @Entity

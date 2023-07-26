@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletResponse
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import java.util.*
+import javax.naming.AuthenticationException
 
 @Service
 class JwtService (
@@ -103,21 +104,22 @@ class JwtService (
      * 토큰 형식 : Bearer XXX에서 Bearer를 제외하고 순수 토큰만 가져오기 위해서
      * 헤더를 가져온 후 "Bearer"를 삭제(""로 replace)
      */
-    fun extractAccessToken(request: HttpServletRequest): String? {
-        val header = request.getHeader(accessHeader) ?: return null
+    fun extractAccessToken(request: HttpServletRequest): String {
+        val header = request.getHeader(accessHeader) ?: throw AuthenticationException("AccessToken이 유효하지 않습니다.")
         return if (header.startsWith(BEARER)) {
             header.replace(BEARER, "")
-        } else null
+        } else throw AuthenticationException("AccessToken이 유효하지 않습니다.")
     }
 
     /**
-     * AccessToken 에서 Email 추출
+     * request 에서 Email 추출
      * 추출 전에 JWT.require()로 검증기 생성
-     * verify 로 AcㅊessToken 검증 후
+     * verify 로 AccessToken 검증 후
      * 유효하다면 getClaim()으로 이메일 추출
      * 유효하지 않다면 빈 Optional 객체 반환
      */
-    fun extractEmail(accessToken: String): String? {
+    fun extractEmail(request: HttpServletRequest): String? {
+        val accessToken = extractAccessToken(request)
         return try {
             JWT.require(Algorithm.HMAC512(secretKey))
                 .build()

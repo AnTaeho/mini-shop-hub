@@ -1,10 +1,13 @@
 package com.example.minishophub.domain.user.service
 
+import com.example.minishophub.domain.user.controller.dto.request.OAuth2UserUpdateRequest
 import com.example.minishophub.domain.user.controller.dto.request.UserJoinRequest
 import com.example.minishophub.domain.user.controller.dto.request.UserUpdateRequest
 import com.example.minishophub.domain.user.persistence.User
 import com.example.minishophub.domain.user.persistence.UserRepository
 import com.example.minishophub.domain.user.persistence.UserRole
+import com.example.minishophub.global.jwt.service.JwtService
+import com.example.minishophub.global.util.fail
 import com.example.minishophub.global.util.findByIdOrThrow
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
@@ -14,7 +17,8 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional(readOnly = true)
 class UserService (
     private val userRepository: UserRepository,
-    private val passwordEncoder: PasswordEncoder
+    private val jwtService: JwtService,
+    private val passwordEncoder: PasswordEncoder,
 ) {
 
     @Transactional
@@ -61,6 +65,12 @@ class UserService (
     @Transactional
     fun delete(userId: Long) {
         userRepository.deleteById(userId)
+    }
+
+    @Transactional
+    fun updateOAuth2(updateRequest: OAuth2UserUpdateRequest, email: String) {
+        val user = userRepository.findByEmail(email)!!
+        user.updateOAuth(updateRequest)
     }
 
 }
