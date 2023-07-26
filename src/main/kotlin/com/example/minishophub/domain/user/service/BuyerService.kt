@@ -75,12 +75,14 @@ class BuyerService (
 
         if (followRepository.existsByBuyerAndShop(follower, followedShop)) {
             followRepository.deleteByBuyerAndShop(follower, followedShop)
+            followedShop.followerDecrease()
             return
         }
         followRepository.save(Follow(
             buyer = follower,
             shop = followedShop
         ))
+        followedShop.followerIncrease()
     }
 
     private fun checkEmail(email: String) {

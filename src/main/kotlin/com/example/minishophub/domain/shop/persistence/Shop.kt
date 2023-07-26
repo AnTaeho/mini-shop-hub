@@ -16,12 +16,22 @@ class Shop(
 
     var ownerId: Long,
 
+    private var followCount: Long = 0L,
+
     @OneToMany(mappedBy = "shop", cascade = [CascadeType.ALL], orphanRemoval = true)
     val itemList: MutableList<Item> = mutableListOf(),
 ) : BaseEntity() {
 
     fun addItem(item: Item) {
         this.itemList.add(item)
+    }
+
+    fun followerIncrease() {
+        followCount++
+    }
+
+    fun followerDecrease() {
+        followCount--
     }
 
     companion object {
