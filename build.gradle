@@ -39,6 +39,9 @@ dependencies {
     testImplementation 'org.springframework.security:spring-security-test'
     implementation 'com.auth0:java-jwt:4.2.1'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
+    //로그 출력
+    implementation 'io.github.oshai:kotlin-logging-jvm:5.0.0'
 }
 
 tasks.withType(KotlinCompile).configureEach {
