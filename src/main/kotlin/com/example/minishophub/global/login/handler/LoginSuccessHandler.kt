@@ -1,6 +1,6 @@
 package com.example.minishophub.global.login.handler
 
-import com.example.minishophub.domain.user.persistence.buyer.BuyerRepository
+import com.example.minishophub.domain.user.persistence.user.UserRepository
 import com.example.minishophub.global.jwt.service.JwtService
 import com.example.minishophub.global.util.fail
 import io.github.oshai.kotlinlogging.KotlinLogging
@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional
 class LoginSuccessHandler(
     private val jwtService: JwtService,
-    private val buyerRepository: BuyerRepository,
+    private val userRepository: UserRepository,
 ) : SimpleUrlAuthenticationSuccessHandler() {
 
     private val log = KotlinLogging.logger { }
@@ -32,9 +32,9 @@ class LoginSuccessHandler(
 
         jwtService.sendAccessAndRefreshToken(response, accessToken, refreshToken)
 
-        val user = buyerRepository.findByEmail(email) ?: fail()
+        val user = userRepository.findByEmail(email) ?: fail()
         user.updateRefreshToken(refreshToken)
-        buyerRepository.save(user)
+        userRepository.save(user)
 
         log.info { "LoginSuccessHandler - onAuthenticationSuccess 종료" }
         log.info { "로그인에 성공했습니다. 이메일 : $email" }

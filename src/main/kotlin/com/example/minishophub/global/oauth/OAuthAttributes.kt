@@ -2,7 +2,7 @@ package com.example.minishophub.global.oauth
 
 import com.example.minishophub.domain.user.persistence.SocialType
 import com.example.minishophub.domain.user.persistence.SocialType.*
-import com.example.minishophub.domain.user.persistence.buyer.Buyer
+import com.example.minishophub.domain.user.persistence.user.User
 import com.example.minishophub.domain.user.persistence.UserRole
 import com.example.minishophub.global.oauth.userInfo.*
 
@@ -64,8 +64,8 @@ class OAuthAttributes(
      * ofXXX 메서드로 OAuthAttribute 객체가 생성 되었고, 유저 정보가 담긴 OAuth2UserInfo 가 주입 된 상태
      * OAuth2UserInfo 에서 정보를 가져와 User Entity 반환
      */
-    fun toEntity(socialType: SocialType, oAuth2UserInfo: OAuth2UserInfo): Buyer {
-        return Buyer(
+    fun toEntity(socialType: SocialType, oAuth2UserInfo: OAuth2UserInfo): User {
+        return User(
             nickname = oAuth2UserInfo.getNickname()!!,
             socialId = oAuth2UserInfo.getId()!!,
             socialType = socialType,
@@ -73,7 +73,8 @@ class OAuthAttributes(
             role = UserRole.GUEST,
             age = -1,
             password = "NOT_NEEDED",
-            city = "none"
+            city = "none",
+            businessRegistrationNumber = "none",
         )
     }
 

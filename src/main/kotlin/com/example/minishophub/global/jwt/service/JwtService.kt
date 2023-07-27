@@ -2,14 +2,13 @@ package com.example.minishophub.global.jwt.service
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
-import com.example.minishophub.domain.user.persistence.buyer.BuyerRepository
+import com.example.minishophub.domain.user.persistence.user.UserRepository
 import io.github.oshai.kotlinlogging.KotlinLogging
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import java.util.*
-import javax.naming.AuthenticationException
 
 @Service
 class JwtService (
@@ -28,7 +27,7 @@ class JwtService (
     @Value("\${jwt.refresh.header}")
     val refreshHeader: String,
 
-    private val buyerRepository: BuyerRepository,
+    private val userRepository: UserRepository,
 
     ) {
     companion object {
@@ -139,7 +138,7 @@ class JwtService (
     fun updateRefreshToken(email: String, refreshToken: String) {
         log.info { "JwtService - updateRefreshToken 시작" }
 
-        val findUser = buyerRepository.findByEmail(email)
+        val findUser = userRepository.findByEmail(email)
         if (findUser == null) {
             throw IllegalArgumentException("일치하는 회원이 없습니다.")
         } else {

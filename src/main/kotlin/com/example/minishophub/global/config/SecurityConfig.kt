@@ -1,7 +1,8 @@
 package com.example.minishophub.global.config
 
 import com.example.minishophub.domain.user.persistence.UserRole
-import com.example.minishophub.domain.user.persistence.buyer.BuyerRepository
+import com.example.minishophub.domain.user.persistence.UserType
+import com.example.minishophub.domain.user.persistence.user.UserRepository
 import com.example.minishophub.global.jwt.filter.JwtAuthenticationProcessingFilter
 import com.example.minishophub.global.jwt.service.JwtService
 import com.example.minishophub.global.login.filter.CustomJsonUsernamePasswordAuthenticationFilter
@@ -34,7 +35,7 @@ class SecurityConfig (
 
     private val loginService: LoginService,
     private val jwtService: JwtService,
-    private val buyerRepository: BuyerRepository,
+    private val userRepository: UserRepository,
     private val objectMapper: ObjectMapper,
     private val oAuth2LoginSuccessHandler: OAuth2LoginSuccessHandler,
     private val oAuth2LoginFailureHandler: OAuth2LoginFailureHandler,
@@ -51,7 +52,8 @@ class SecurityConfig (
             .authorizeHttpRequests {
                 it.requestMatchers("/","/css/**","/images/**","/js/**","/favicon.ico","/h2-console/**").permitAll()
                 it.requestMatchers("/sign-up").permitAll()
-                it.requestMatchers("/owner/**").hasRole(UserRole.SELLER_AUTHENTICATION_DONE.name)
+                it.requestMatchers("/owner/shop").hasRole(UserRole.SELLER_AUTHENTICATION_REQUIRED.name)
+                it.requestMatchers("/owner/**").hasRole(UserType.SELLER.name)
                 it.requestMatchers("/admin/**").hasRole(UserRole.ADMIN.name)
                 it.anyRequest().authenticated()
             }
@@ -82,7 +84,7 @@ class SecurityConfig (
 
     @Bean
     fun loginSuccessHandler(): LoginSuccessHandler? {
-        return LoginSuccessHandler(jwtService, buyerRepository)
+        return LoginSuccessHandler(jwtService, userRepository)
     }
 
     /**
@@ -104,6 +106,6 @@ class SecurityConfig (
 
     @Bean
     fun jwtAuthenticationProcessingFilter(): JwtAuthenticationProcessingFilter? {
-        return JwtAuthenticationProcessingFilter(jwtService, buyerRepository)
+        return JwtAuthenticationProcessingFilter(jwtService, userRepository)
     }
 }

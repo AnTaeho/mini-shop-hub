@@ -1,7 +1,7 @@
 package com.example.minishophub.domain.user.persistence.follow
 
 import com.example.minishophub.domain.shop.persistence.Shop
-import com.example.minishophub.domain.user.persistence.buyer.Buyer
+import com.example.minishophub.domain.user.persistence.user.User
 import jakarta.persistence.*
 
 @Entity
@@ -13,7 +13,7 @@ class Follow (
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "follower")
-    var buyer: Buyer,
+    var user: User,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "followedShop")

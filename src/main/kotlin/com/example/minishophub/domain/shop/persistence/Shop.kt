@@ -10,9 +10,9 @@ class Shop(
     @Column(name = "shop_id")
     var id: Long = 0,
 
-    val name: String,
-    val location: String,
-    val businessRegistrationNumber: String,
+    var name: String,
+    var location: String,
+    var businessRegistrationNumber: String,
 
     var ownerId: Long,
 
@@ -32,17 +32,6 @@ class Shop(
 
     fun followerDecrease() {
         followCount--
-    }
-
-    companion object {
-        fun defaultShop(ownerId: Long): Shop {
-            return Shop(
-                name = "no-name",
-                location = "no-location",
-                businessRegistrationNumber = "no-number",
-                ownerId = ownerId
-            )
-        }
     }
 
 }

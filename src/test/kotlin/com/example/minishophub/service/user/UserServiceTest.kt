@@ -2,8 +2,8 @@ package com.example.minishophub.service.user
 
 import com.example.minishophub.domain.user.controller.dto.request.UserJoinRequest
 import com.example.minishophub.domain.user.controller.dto.request.UserUpdateRequest
-import com.example.minishophub.domain.user.persistence.buyer.Buyer
-import com.example.minishophub.domain.user.persistence.buyer.BuyerRepository
+import com.example.minishophub.domain.user.persistence.user.User
+import com.example.minishophub.domain.user.persistence.user.UserRepository
 import com.example.minishophub.domain.user.service.BuyerService
 import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.AfterEach
@@ -14,14 +14,14 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 
 @SpringBootTest
-class BuyerServiceTest @Autowired constructor(
+class UserServiceTest @Autowired constructor(
     private val buyerService: BuyerService,
-    private val buyerRepository: BuyerRepository,
+    private val userRepository: UserRepository,
 ) {
 
     @AfterEach
     fun clear() {
-        buyerRepository.deleteAll()
+        userRepository.deleteAll()
     }
 
     @Test
@@ -40,7 +40,7 @@ class BuyerServiceTest @Autowired constructor(
         buyerService.join(joinRequest)
 
         //then
-        val result = buyerRepository.findAll()
+        val result = userRepository.findAll()
         assertThat(result.size).isEqualTo(1)
         assertThat(result[0].email).isEqualTo("test@naver.com")
         assertThat(result[0].nickname).isEqualTo("test1")
@@ -110,8 +110,8 @@ class BuyerServiceTest @Autowired constructor(
     @DisplayName("유저 조회 성공")
     fun findUserTest() {
         //given
-        val buyer = Buyer.fixture()
-        val savedUser = buyerRepository.save(buyer)
+        val user = User.fixture()
+        val savedUser = userRepository.save(user)
 
         //when
         val findUser = buyerService.find(savedUser.id!!)
@@ -128,8 +128,8 @@ class BuyerServiceTest @Autowired constructor(
     @DisplayName("유저 조회 실패")
     fun findFailTest() {
         //given
-        val buyer = Buyer.fixture()
-        val savedUser = buyerRepository.save(buyer)
+        val user = User.fixture()
+        val savedUser = userRepository.save(user)
 
         //when & then
         val message = assertThrows<IllegalArgumentException> {
@@ -142,8 +142,8 @@ class BuyerServiceTest @Autowired constructor(
     @DisplayName("유저 수정 성공")
     fun updateTest() {
         //given
-        val buyer = Buyer.fixture()
-        val savedUser = buyerRepository.save(buyer)
+        val user = User.fixture()
+        val savedUser = userRepository.save(user)
 
         val updateRequest = UserUpdateRequest(
             email = "update@naver.com",
@@ -168,8 +168,8 @@ class BuyerServiceTest @Autowired constructor(
     @DisplayName("회원 수정 실패 - 닉네임 중복")
     fun updateFailTest1() {
         //given
-        val buyer = Buyer.fixture()
-        val savedUser = buyerRepository.save(buyer)
+        val user = User.fixture()
+        val savedUser = userRepository.save(user)
 
         val updateRequest = UserUpdateRequest(
             email = "update@naver.com",
@@ -191,8 +191,8 @@ class BuyerServiceTest @Autowired constructor(
     @DisplayName("회원 수정 실패 - 이메일 중복")
     fun updateFailTest2() {
         //given
-        val buyer = Buyer.fixture()
-        val savedUser = buyerRepository.save(buyer)
+        val user = User.fixture()
+        val savedUser = userRepository.save(user)
 
         val updateRequest = UserUpdateRequest(
             email = "fixture@naver.com",
@@ -214,13 +214,13 @@ class BuyerServiceTest @Autowired constructor(
     @DisplayName("회원 삭제")
     fun deleteUserTest() {
         //given
-        val savedBuyer = buyerRepository.save(Buyer.fixture())
+        val savedUser = userRepository.save(User.fixture())
 
         //when
-        buyerService.delete(savedBuyer.id!!)
+        buyerService.delete(savedUser.id!!)
 
         //then
-        val result = buyerRepository.findAll()
+        val result = userRepository.findAll()
         assertThat(result).isEmpty()
     }
 
