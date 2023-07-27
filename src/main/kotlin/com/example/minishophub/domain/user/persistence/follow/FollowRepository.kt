@@ -12,5 +12,5 @@ interface FollowRepository : JpaRepository<Follow, Long> {
 
     fun existsByUserAndShop(user: User, shop: Shop): Boolean
 
-    fun findAllByUser(user: User): MutableList<Follow>
+    fun findAllByShop(shop: Shop): MutableList<Follow>
 }

@@ -1,9 +1,8 @@
 package com.example.minishophub.global.evnet
 
-import com.example.minishophub.domain.user.persistence.user.User
+import com.example.minishophub.domain.user.persistence.follow.Follow
 
-class NoticeEvent(
-    val followers: MutableList<User>,
+data class NoticeEvent(
+    val followers: MutableList<Follow>,
     val message: String,
-) {
-}
+)
