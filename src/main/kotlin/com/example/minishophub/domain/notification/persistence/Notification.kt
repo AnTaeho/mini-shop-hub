@@ -10,6 +10,7 @@ class Notification (
     var id: Long = 0L,
 
     var message: String,
+    var isChecked: Boolean = false,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
