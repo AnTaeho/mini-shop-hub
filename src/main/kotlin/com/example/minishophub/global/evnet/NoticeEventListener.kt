@@ -5,6 +5,7 @@ import com.example.minishophub.domain.notification.persistence.NotificationRepos
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
+import org.springframework.transaction.annotation.Transactional
 
 @Component
 class NoticeEventListener(
@@ -14,6 +15,7 @@ class NoticeEventListener(
     private val log = KotlinLogging.logger { }
 
     @EventListener
+    @Transactional
     fun sendNotification(event: NoticeEvent) {
         log.info { "알람 생성 시작" }
         event.followers.forEach {

@@ -15,6 +15,10 @@ class Notification (
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     var notifiedUser: User,
-)
+) {
+    init {
+        notifiedUser.notifications.add(this)
+    }
+}
 
 
