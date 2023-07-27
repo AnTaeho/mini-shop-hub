@@ -1,6 +1,7 @@
 package com.example.minishophub.domain.user.persistence.user
 
 import com.example.minishophub.domain.base.BaseEntity
+import com.example.minishophub.domain.notification.persistence.Notification
 import com.example.minishophub.domain.shop.persistence.Shop
 import com.example.minishophub.domain.user.controller.dto.request.OAuth2UserUpdateRequest
 import com.example.minishophub.domain.user.controller.dto.request.UserUpdateRequest
@@ -41,7 +42,10 @@ class User(
     @JoinColumn(name = "shop_id")
     var myShop: Shop? = null,
 
-) : BaseEntity() {
+    @OneToMany(mappedBy = "notifiedUser", cascade = [CascadeType.REMOVE])
+    var notifications: MutableList<Notification> = mutableListOf(),
+
+    ) : BaseEntity() {
 
     private fun authorizeUser() {
         this.role = UserRole.USER
