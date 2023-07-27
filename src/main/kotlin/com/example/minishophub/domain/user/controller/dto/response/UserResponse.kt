@@ -14,7 +14,7 @@ data class UserResponse(
     companion object {
         fun of(user: User): UserResponse {
             return UserResponse(
-                userId = user.id!!,
+                userId = user.id,
                 nickname = user.nickname,
                 email = user.email,
                 age = user.age,

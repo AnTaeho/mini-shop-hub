@@ -5,6 +5,8 @@ import com.example.minishophub.domain.item.persistence.Category
 import com.example.minishophub.domain.item.persistence.Item
 import com.example.minishophub.domain.item.persistence.ItemRepository
 import com.example.minishophub.domain.shop.persistence.ShopRepository
+import com.example.minishophub.global.evnet.NoticeEvent
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -13,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional
 class ItemService(
     private val itemRepository: ItemRepository,
     private val shopRepository: ShopRepository,
+    private val publisher: ApplicationEventPublisher,
 ) {
 
     @Transactional
@@ -26,6 +29,7 @@ class ItemService(
             shop = shop
         )
         shop.addItem(item)
+//        publisher.publishEvent(NoticeEvent())
         return itemRepository.save(item)
     }
 
