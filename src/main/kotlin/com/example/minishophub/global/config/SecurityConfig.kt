@@ -9,12 +9,14 @@ import com.example.minishophub.global.login.filter.CustomJsonUsernamePasswordAut
 import com.example.minishophub.global.login.handler.LoginFailureHandler
 import com.example.minishophub.global.login.handler.LoginSuccessHandler
 import com.example.minishophub.global.login.service.LoginService
+import com.example.minishophub.global.logout.CustomLogoutSuccessHandler
 import com.example.minishophub.global.oauth.handler.OAuth2LoginFailureHandler
 import com.example.minishophub.global.oauth.handler.OAuth2LoginSuccessHandler
 import com.example.minishophub.global.oauth.service.CustomOAuth2UserService
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpMethod
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.ProviderManager
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider
@@ -53,7 +55,7 @@ class SecurityConfig (
                 it.requestMatchers("/","/css/**","/images/**","/js/**","/favicon.ico","/h2-console/**").permitAll()
                 it.requestMatchers("/sign-up").permitAll()
                 it.requestMatchers("/owner/shop").hasRole(UserRole.SELLER_AUTHENTICATION_REQUIRED.name)
-                it.requestMatchers("/owner/**").hasRole(UserType.SELLER.name)
+                it.requestMatchers("/owner/**").hasRole(UserRole.SELLER_AUTHENTICATION_DONE.name)
                 it.requestMatchers("/admin/**").hasRole(UserRole.ADMIN.name)
                 it.anyRequest().authenticated()
             }
@@ -63,6 +65,12 @@ class SecurityConfig (
                 it.userInfoEndpoint { user -> user
                     .userService(customOAuth2UserService)
                 }
+            }
+            .logout {
+                it.logoutUrl("/logout")
+//                it.logoutSuccessHandler(CustomLogoutSuccessHandler(jwtService, userRepository))
+//                it.clearAuthentication(true)
+                it.logoutSuccessUrl("/jwt-test").permitAll()
             }
             .addFilterBefore(customJsonUsernamePasswordAuthenticationFilter(), LogoutFilter::class.java)
             .addFilterAfter(jwtAuthenticationProcessingFilter(), CustomJsonUsernamePasswordAuthenticationFilter::class.java)

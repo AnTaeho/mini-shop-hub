@@ -12,6 +12,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper
 import org.springframework.security.core.authority.mapping.NullAuthoritiesMapper
 import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.web.filter.OncePerRequestFilter
 
 /**
@@ -106,6 +107,8 @@ class JwtAuthenticationProcessingFilter(
     private fun saveAuthentication(user: User) {
         val password: String = PasswordUtil.generateRandomPassword()
 
+        log.info { "인증 정보 저장 시작" }
+
         val userDetailsUser = org.springframework.security.core.userdetails.User.builder()
             .username(user.email)
             .password(password)
@@ -118,7 +121,13 @@ class JwtAuthenticationProcessingFilter(
             authoritiesMapper.mapAuthorities(userDetailsUser.authorities)
         )
 
+        val userDetails = authentication.principal as UserDetails
+        println("userDetails.username = ${userDetails.username}")
+
         SecurityContextHolder.getContext().authentication = authentication
+
+        log.info { "인증 정보 저장 종료" }
+
     }
 
 }

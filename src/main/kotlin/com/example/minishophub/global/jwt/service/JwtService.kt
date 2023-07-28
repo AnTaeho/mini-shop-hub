@@ -54,6 +54,14 @@ class JwtService (
             .sign(Algorithm.HMAC512(secretKey))
     }
 
+    fun createFakeAccessToken(): String {
+        val now = Date()
+        return JWT.create()
+            .withSubject(ACCESS_TOKEN_SUBJECT)
+            .withExpiresAt(Date(now.time + accessTokenExpirationPeriod))
+            .sign(Algorithm.HMAC512(secretKey))
+    }
+
     /**
      * RefreshToken 생성
      * RefreshToken 은 Claim 필요 없음

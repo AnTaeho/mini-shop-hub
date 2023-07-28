@@ -6,6 +6,7 @@ import com.example.minishophub.domain.user.controller.dto.request.UserUpdateRequ
 import com.example.minishophub.domain.user.controller.dto.response.UserResponse
 import com.example.minishophub.domain.user.service.BuyerService
 import org.springframework.security.core.annotation.AuthenticationPrincipal
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.web.bind.annotation.*
 
