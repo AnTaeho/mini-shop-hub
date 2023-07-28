@@ -7,7 +7,6 @@ import com.example.minishophub.domain.item.service.ItemService
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping
 class ItemController(
     private val itemService: ItemService,
 ) {

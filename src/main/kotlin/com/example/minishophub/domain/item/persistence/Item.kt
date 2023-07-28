@@ -1,19 +1,23 @@
 package com.example.minishophub.domain.item.persistence
 
 import com.example.minishophub.domain.shop.persistence.Shop
+import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.persistence.*
 
 @Entity
-class Item (
+class Item(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "item_id")
     var id: Long = 0L,
 
-    val name: String,
-    val image: String,
-    val category: Category,
+    var name: String,
+    var image: String,
     var quantity: Int,
 
+    @Enumerated(EnumType.STRING)
+    var category: Category,
+
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "shop_id")
     var shop: Shop,

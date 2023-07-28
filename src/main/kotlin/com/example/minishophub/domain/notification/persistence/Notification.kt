@@ -1,6 +1,7 @@
 package com.example.minishophub.domain.notification.persistence
 
 import com.example.minishophub.domain.user.persistence.user.User
+import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.persistence.*
 
 @Entity
@@ -12,6 +13,7 @@ class Notification (
     var message: String,
     var isChecked: Boolean = false,
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     var notifiedUser: User,
