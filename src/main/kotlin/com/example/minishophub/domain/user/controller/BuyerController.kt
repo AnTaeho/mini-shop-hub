@@ -1,18 +1,20 @@
 package com.example.minishophub.domain.user.controller
 
+import com.example.minishophub.domain.user.controller.dto.request.MailRequest
 import com.example.minishophub.domain.user.controller.dto.request.OAuth2UserUpdateRequest
 import com.example.minishophub.domain.user.controller.dto.request.UserJoinRequest
 import com.example.minishophub.domain.user.controller.dto.request.UserUpdateRequest
 import com.example.minishophub.domain.user.controller.dto.response.UserResponse
 import com.example.minishophub.domain.user.service.BuyerService
+import com.example.minishophub.domain.user.service.MailService
 import org.springframework.security.core.annotation.AuthenticationPrincipal
-import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.web.bind.annotation.*
 
 @RestController
 class BuyerController (
     private val buyerService: BuyerService,
+    private val mailService: MailService,
 ) {
 
     @PostMapping("/sign-up")
@@ -51,6 +53,11 @@ class BuyerController (
     @DeleteMapping("/user/{userId}")
     fun deleteUser(@PathVariable userId: Long) {
         buyerService.delete(userId)
+    }
+
+    @PutMapping("/change-password")
+    fun changePassword(@RequestBody mailRequest: MailRequest) {
+        mailService.sendResettingPasswordMail(mailRequest)
     }
 
     @GetMapping("/jwt-test")
