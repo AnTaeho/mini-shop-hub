@@ -5,6 +5,7 @@ import com.example.minishophub.domain.user.persistence.SocialType.*
 import com.example.minishophub.domain.user.persistence.user.User
 import com.example.minishophub.domain.user.persistence.UserRole
 import com.example.minishophub.global.oauth.userInfo.*
+import io.github.oshai.kotlinlogging.KotlinLogging
 
 /**
  * 각 소셜 별로 다르게 들어오는 정보를 처리하는 클래스
@@ -13,6 +14,8 @@ class OAuthAttributes(
     val nameAttributeKey: String,
     val oAuth2UserInfo: OAuth2UserInfo,
 ) {
+
+    private val log = KotlinLogging.logger { }
 
     /**
      * SocialType 에 맞춰서 OAuthAttribute 객체 반환
@@ -65,6 +68,9 @@ class OAuthAttributes(
      * OAuth2UserInfo 에서 정보를 가져와 User Entity 반환
      */
     fun toEntity(socialType: SocialType, oAuth2UserInfo: OAuth2UserInfo): User {
+
+        log.info { "OAuthAttributes - toEntity 동작" }
+
         return User(
             nickname = oAuth2UserInfo.getNickname()!!,
             socialId = oAuth2UserInfo.getId()!!,

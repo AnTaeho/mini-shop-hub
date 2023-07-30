@@ -5,6 +5,7 @@ import com.example.minishophub.domain.user.persistence.user.User
 import com.example.minishophub.domain.user.persistence.user.UserRepository
 import com.example.minishophub.global.oauth.CustomOAuth2User
 import com.example.minishophub.global.oauth.OAuthAttributes
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest
@@ -18,12 +19,17 @@ class CustomOAuth2UserService(
     private val userRepository: UserRepository,
 ) : OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
+    private val log = KotlinLogging.logger { }
+
     companion object {
         const val NAVER = "naver"
         const val KAKAO = "kakao"
     }
 
     override fun loadUser(userRequest: OAuth2UserRequest): OAuth2User {
+
+        log.info { "CustomOAuth2UserService - loadUser 시작" }
+
         val delegate: OAuth2UserService<OAuth2UserRequest, OAuth2User> = DefaultOAuth2UserService()
         val oAuth2User = delegate.loadUser(userRequest)
         val registrationId = userRequest.clientRegistration.registrationId
@@ -33,6 +39,8 @@ class CustomOAuth2UserService(
         val attributes = oAuth2User.attributes
         val extractAttributes = OAuthAttributes.of(socialType, userNameAttributeName, attributes)
         val createUser: User = getUser(extractAttributes, socialType)
+
+        log.info { "CustomOAuth2UserService - loadUser 종료" }
 
         return CustomOAuth2User(
             Collections.singleton(SimpleGrantedAuthority(createUser.role.key)),

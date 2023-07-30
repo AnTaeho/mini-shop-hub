@@ -1,6 +1,7 @@
 package com.example.minishophub.global.login.filter
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import io.github.oshai.kotlinlogging.KotlinLogging
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.security.authentication.AuthenticationServiceException
@@ -27,12 +28,17 @@ class CustomJsonUsernamePasswordAuthenticationFilter(
             AntPathRequestMatcher(DEFAULT_LOGIN_REQUEST_URL, HTTP_METHOD)
     }
 
+    private val log = KotlinLogging.logger { }
+
     /**
      * StreamUtils 를 통해서 request 에서 messageBody(JSON) 추출
      * messageBody 를 Map 으로 변환 후 추출
      * 추출한 email, password 를  UsernamePasswordAuthenticationToken 의 파라미터로 대입
      */
     override fun attemptAuthentication(request: HttpServletRequest, response: HttpServletResponse): Authentication {
+
+        log.info { "CustomJsonUsernamePasswordAuthenticationFilter - attemptAuthentication 시작" }
+
         // JSON 요청만 처리
         if (request.contentType == null || !request.contentType.equals(CONTENT_TYPE)) {
             throw AuthenticationServiceException("Authentication Content-Type not supported: " + request.contentType)
@@ -46,6 +52,11 @@ class CustomJsonUsernamePasswordAuthenticationFilter(
         val password = usernamePasswordMap[PASSWORD_KEY]
 
         val authRequest = UsernamePasswordAuthenticationToken(email, password)
+
+        log.info { "CustomJsonUsernamePasswordAuthenticationFilter - attemptAuthentication 종료" }
+
         return this.authenticationManager.authenticate(authRequest)
+
+
     }
 }
