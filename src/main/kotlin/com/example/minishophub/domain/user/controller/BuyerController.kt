@@ -43,9 +43,13 @@ class BuyerController (
         buyerService.update(userId, updateRequest)
     }
 
-    @PutMapping("/user/password")
+    @PutMapping("/user/password/{email}")
     fun changePassword(@AuthenticationPrincipal userDetails: UserDetails,
-                       @RequestBody password: String) {
+                       @RequestBody password: String,
+                       @PathVariable email: String) {
+        if (email != userDetails.username) {
+            throw IllegalArgumentException("본인이 아닙니다.")
+        }
         buyerService.changePassword(userDetails.username, password)
     }
 
@@ -61,8 +65,12 @@ class BuyerController (
         buyerService.delete(userId)
     }
 
-    @PutMapping("/change-password")
-    fun changePassword(@RequestBody mailRequest: MailRequest) {
+    @GetMapping("/change-password")
+    fun changePassword(@RequestBody mailRequest: MailRequest,
+                       @AuthenticationPrincipal userDetails: UserDetails) {
+        if (mailRequest.email != userDetails.username) {
+            throw IllegalArgumentException("본인 인증된 이메일이 아닙니다.")
+        }
         mailService.sendResettingPasswordMail(mailRequest)
     }
 

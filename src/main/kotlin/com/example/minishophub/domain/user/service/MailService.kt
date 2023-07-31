@@ -14,7 +14,7 @@ class MailService(
         val message = SimpleMailMessage()
         message.setTo(request.email)
         message.subject = request.title
-        message.text = request.content
+        message.text = request.content + request.email
         javaMailSender.send(message)
 
     }
