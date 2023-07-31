@@ -45,7 +45,7 @@ class User(
     @OneToMany(mappedBy = "notifiedUser", cascade = [CascadeType.REMOVE])
     var notifications: MutableList<Notification> = mutableListOf(),
 
-    ) : BaseEntity() {
+) : BaseEntity() {
 
     private fun authorizeUser() {
         this.role = UserRole.USER
