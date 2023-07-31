@@ -20,13 +20,18 @@ class SellerService(
     fun changeToSeller(email: String, applyRequest: SellerApplyRequest): User {
         val owner = userRepository.findByEmail(email) ?: fail()
 
-        if (owner.role != UserRole.USER) {
-            throw IllegalArgumentException("추가 인증이 안되어 있는 유저 입니다.")
-        }
+        checkQualification(owner)
 
+        // TODO : 사업자 번호 상태 확인후 처리 필요
         owner.changeToSeller(applyRequest.bizNumber)
 
         return userRepository.save(owner)
+    }
+
+    private fun checkQualification(owner: User) {
+        if (owner.role != UserRole.USER) {
+            throw IllegalArgumentException("추가 인증이 안되어 있는 유저 입니다.")
+        }
     }
 
     @Transactional
@@ -42,6 +47,8 @@ class SellerService(
 
     fun find(userId: Long) : User = userRepository.findByIdOrThrow(userId)
 
+    fun deleteSeller(sellerId: Long) = userRepository.deleteById(sellerId)
+
     private fun checkEmail(email: String) {
         if (userRepository.findEmail(email) != null) {
             throw IllegalArgumentException("이미 존재하는 이메일 입니다.")
@@ -53,7 +60,5 @@ class SellerService(
             throw IllegalArgumentException("이미 존재하는 닉네임 입니다.")
         }
     }
-
-    fun deleteSeller(sellerId: Long) = userRepository.deleteById(sellerId)
 
 }

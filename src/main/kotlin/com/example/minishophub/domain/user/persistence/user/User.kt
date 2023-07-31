@@ -47,10 +47,6 @@ class User(
 
 ) : BaseEntity() {
 
-    private fun authorizeUser() {
-        this.role = UserRole.USER
-    }
-
     fun passwordEncode(passwordEncoder: PasswordEncoder) {
         this.password = passwordEncoder.encode(this.password)
     }
@@ -69,7 +65,7 @@ class User(
     fun updateOAuth(updateRequest: OAuth2UserUpdateRequest) {
         age = updateRequest.age
         city = updateRequest.city
-        authorizeUser()
+        this.role = UserRole.USER
     }
 
     fun registerShop(shop: Shop) {
@@ -86,8 +82,8 @@ class User(
         role = UserRole.SELLER_AUTHENTICATION_REQUIRED
     }
 
-    fun updatePassword(password: String) {
-        this.password = password
+    fun updatePassword(password: String, passwordEncoder: PasswordEncoder) {
+        this.password = passwordEncoder.encode(password)
     }
 
     companion object {

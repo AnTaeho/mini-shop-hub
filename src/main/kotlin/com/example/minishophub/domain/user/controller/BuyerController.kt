@@ -26,22 +26,15 @@ class BuyerController (
     @PostMapping("/follow/{shopId}")
     fun followShop(@PathVariable shopId: Long,
                    @AuthenticationPrincipal userDetails: UserDetails,
-    ) {
-        buyerService.followShop(shopId, userDetails.username)
-    }
+    ) = buyerService.followShop(shopId, userDetails.username)
 
     @GetMapping("/user/{userId}")
-    fun findUser(@PathVariable userId: Long): UserResponse {
-        val find = buyerService.find(userId)
-        return UserResponse.of(find)
-    }
+    fun findUser(@PathVariable userId: Long): UserResponse = UserResponse.of(buyerService.find(userId))
 
     @PutMapping("/user/{userId}")
     fun updateUser(@PathVariable userId: Long,
                    @RequestBody updateRequest: UserUpdateRequest
-    ) {
-        buyerService.update(userId, updateRequest)
-    }
+    ) = buyerService.update(userId, updateRequest)
 
     @PutMapping("/user/password/{email}")
     fun changePassword(@AuthenticationPrincipal userDetails: UserDetails,
@@ -55,15 +48,11 @@ class BuyerController (
 
     @PutMapping("/oauth")
     fun updateOAuthInfo(@AuthenticationPrincipal userDetails: UserDetails,
-                        @RequestBody updateRequest: OAuth2UserUpdateRequest) {
-        val email = userDetails.username
-        buyerService.updateOAuth2(updateRequest, email!!)
-    }
+                        @RequestBody updateRequest: OAuth2UserUpdateRequest
+    ) = buyerService.updateOAuth2(updateRequest, userDetails.username!!)
 
     @DeleteMapping("/user/{userId}")
-    fun deleteUser(@PathVariable userId: Long) {
-        buyerService.delete(userId)
-    }
+    fun deleteUser(@PathVariable userId: Long) = buyerService.delete(userId)
 
     @GetMapping("/change-password")
     fun changePassword(@RequestBody mailRequest: MailRequest,

@@ -3,7 +3,6 @@ package com.example.minishophub.domain.shop.controller.dto
 import com.example.minishophub.domain.shop.controller.dto.request.ShopRegisterRequest
 import com.example.minishophub.domain.shop.persistence.Shop
 import com.example.minishophub.domain.shop.service.ShopService
-import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -21,11 +20,7 @@ class ShopController(
     @PostMapping("/owner/shop")
     fun registerShop(@RequestBody registerRequest: ShopRegisterRequest,
                      @AuthenticationPrincipal userDetails: UserDetails,
-    ): Shop {
-        println("인가는 통과 함 - ${userDetails.username}")
-        val email = userDetails.username
-        return shopService.registerShop(registerRequest, email!!)
-    }
+    ): Shop = shopService.registerShop(registerRequest, userDetails.username!!)
 
     @GetMapping("/shop/{shopId}")
     fun findShop1(@PathVariable shopId: Long): Shop = shopService.findShop(shopId)

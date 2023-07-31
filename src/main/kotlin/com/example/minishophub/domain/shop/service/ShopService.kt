@@ -32,7 +32,8 @@ class ShopService(
     }
 
     private fun checkSeller(owner: User) {
-        if (owner.role != UserRole.SELLER_AUTHENTICATION_REQUIRED) {
+        if (owner.role != UserRole.SELLER_AUTHENTICATION_REQUIRED ||
+            owner.role != UserRole.SELLER_AUTHENTICATION_DONE) {
             throw IllegalArgumentException("셀러가 아닙니다.")
         }
     }

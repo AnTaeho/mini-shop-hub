@@ -17,10 +17,7 @@ class SellerController(
     @PostMapping
     fun changeToSeller(@RequestBody applyRequest: SellerApplyRequest,
                        @AuthenticationPrincipal userDetails: UserDetails,
-    ): User {
-        val email = userDetails.username
-        return sellerService.changeToSeller(email!!, applyRequest)
-    }
+    ): User = sellerService.changeToSeller(userDetails.username!!, applyRequest)
 
 
     @GetMapping("/user/{userId}")

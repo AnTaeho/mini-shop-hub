@@ -60,8 +60,7 @@ class BuyerService (
     @Transactional
     fun changePassword(email: String, password: String) {
         val user = userRepository.findByEmail(email) ?: fail()
-        user.updatePassword(password)
-        user.passwordEncode(passwordEncoder)
+        user.updatePassword(password, passwordEncoder)
     }
 
     @Transactional

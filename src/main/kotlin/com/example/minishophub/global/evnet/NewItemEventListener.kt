@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 
 @Component
-class NoticeEventListener(
+class NewItemEventListener(
     private val notificationRepository: NotificationRepository,
 ) {
 
@@ -16,7 +16,7 @@ class NoticeEventListener(
 
     @EventListener
     @Transactional
-    fun sendNotification(event: NoticeEvent) {
+    fun sendNotification(event: NewItemEvent) {
         log.info { "알람 생성 시작" }
         event.followers.forEach {
             notificationRepository.save(

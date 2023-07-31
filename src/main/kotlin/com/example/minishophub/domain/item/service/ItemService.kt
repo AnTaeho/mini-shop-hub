@@ -6,7 +6,7 @@ import com.example.minishophub.domain.item.persistence.Item
 import com.example.minishophub.domain.item.persistence.ItemRepository
 import com.example.minishophub.domain.shop.persistence.ShopRepository
 import com.example.minishophub.domain.user.persistence.follow.FollowRepository
-import com.example.minishophub.global.evnet.NoticeEvent
+import com.example.minishophub.global.evnet.NewItemEvent
 import com.example.minishophub.global.util.fail
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service
@@ -33,7 +33,7 @@ class ItemService(
         )
         shop.addItem(item)
         val follows = followRepository.findAllByShop(shop)
-        publisher.publishEvent(NoticeEvent(follows, "새로운 상품이 등록 되었습니다. - ${item.name}"))
+        publisher.publishEvent(NewItemEvent(follows, "새로운 상품이 등록 되었습니다. - ${item.name}"))
         return itemRepository.save(item)
     }
 
