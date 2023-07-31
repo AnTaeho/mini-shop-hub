@@ -30,6 +30,6 @@ class ItemController(
     fun sell(@PathVariable itemId: Long,
                 @RequestBody count: Int) = itemService.sellItem(itemId, count)
 
-    @DeleteMapping("/{itemId}")
+    @DeleteMapping("/owner/item/{itemId}")
     fun deleteItem(@PathVariable itemId: Long) = itemService.deleteItem(itemId)
 }
