@@ -27,6 +27,7 @@ class BuyerService (
     @Transactional
     fun join(joinRequest: UserJoinRequest) {
 
+        // 인덱싱으로 최적화 가능
         checkEmail(joinRequest.email)
         checkNickname(joinRequest.nickname)
 
@@ -55,6 +56,13 @@ class BuyerService (
         checkNickname(updateRequest.nickname)
 
         user.update(updateRequest)
+    }
+
+    @Transactional
+    fun changePassword(email: String, password: String) {
+        val user = userRepository.findByEmail(email) ?: fail()
+        user.updatePassword(password)
+        user.passwordEncode(passwordEncoder)
     }
 
     @Transactional

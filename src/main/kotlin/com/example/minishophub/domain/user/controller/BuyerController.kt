@@ -43,6 +43,12 @@ class BuyerController (
         buyerService.update(userId, updateRequest)
     }
 
+    @PutMapping("/user/password")
+    fun changePassword(@AuthenticationPrincipal userDetails: UserDetails,
+                       @RequestBody password: String) {
+        buyerService.changePassword(userDetails.username, password)
+    }
+
     @PutMapping("/oauth")
     fun updateOAuthInfo(@AuthenticationPrincipal userDetails: UserDetails,
                         @RequestBody updateRequest: OAuth2UserUpdateRequest) {

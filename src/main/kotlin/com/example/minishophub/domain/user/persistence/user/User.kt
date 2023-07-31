@@ -86,6 +86,10 @@ class User(
         role = UserRole.SELLER_AUTHENTICATION_REQUIRED
     }
 
+    fun updatePassword(password: String) {
+        this.password = password
+    }
+
     companion object {
         fun fixture(): User {
             return User(
