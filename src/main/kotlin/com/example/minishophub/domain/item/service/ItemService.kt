@@ -7,6 +7,7 @@ import com.example.minishophub.domain.item.persistence.ItemRepository
 import com.example.minishophub.domain.shop.persistence.ShopRepository
 import com.example.minishophub.domain.user.persistence.follow.FollowRepository
 import com.example.minishophub.global.evnet.NoticeEvent
+import com.example.minishophub.global.util.fail
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -38,13 +39,13 @@ class ItemService(
 
     @Transactional
     fun sellItem(itemId: Long, count: Int = 1) {
-        val item = itemRepository.findById(itemId).get()
+        val item = itemRepository.findItemWithLock(itemId) ?: fail()
         item.sell(count)
     }
 
     @Transactional
     fun reStockItem(itemId: Long, count: Int = 1) {
-        val item = itemRepository.findById(itemId).get()
+        val item = itemRepository.findItemWithLock(itemId) ?: fail()
         item.reStock(count)
     }
 
