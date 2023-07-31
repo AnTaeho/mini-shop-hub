@@ -8,8 +8,6 @@ import org.springframework.data.repository.query.Param
 interface UserRepository : JpaRepository<User, Long> {
     fun findByEmail(email: String): User?
     fun findByRefreshToken(refreshToken: String): User?
-    fun existsByEmail(email: String): Boolean
-    fun existsByNickname(nickname: String): Boolean
     fun findBySocialTypeAndSocialId(socialType: SocialType, socialId: String): User?
 
     @Query("select u.email from User u where u.email = :email")
