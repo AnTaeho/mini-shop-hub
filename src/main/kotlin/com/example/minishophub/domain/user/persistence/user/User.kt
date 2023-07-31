@@ -12,7 +12,7 @@ import jakarta.persistence.*
 import org.springframework.security.crypto.password.PasswordEncoder
 
 @Entity
-@Table(name = "USERS")
+@Table(name = "USERS", indexes = [Index(name = "idx_email_nickname_PK", columnList = "email, nickname, user_id")])
 class User(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")

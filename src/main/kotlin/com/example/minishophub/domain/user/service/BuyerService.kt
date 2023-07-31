@@ -27,7 +27,6 @@ class BuyerService (
     @Transactional
     fun join(joinRequest: UserJoinRequest) {
 
-        // 인덱싱으로 최적화 가능
         checkEmail(joinRequest.email)
         checkNickname(joinRequest.nickname)
 
@@ -94,13 +93,13 @@ class BuyerService (
     }
 
     private fun checkEmail(email: String) {
-        if (userRepository.existsByEmail(email)) {
+        if (userRepository.findEmail(email) != null) {
             throw IllegalArgumentException("이미 존재하는 이메일 입니다.")
         }
     }
 
     private fun checkNickname(nickname: String) {
-        if (userRepository.existsByNickname(nickname)) {
+        if (userRepository.findNickname(nickname) != null) {
             throw IllegalArgumentException("이미 존재하는 닉네임 입니다.")
         }
     }
