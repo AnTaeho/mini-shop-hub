@@ -15,15 +15,11 @@ class OAuth2LoginSuccessHandler(
     private val jwtService: JwtService,
 ) : AuthenticationSuccessHandler {
 
-    private val log = KotlinLogging.logger { }
-
     override fun onAuthenticationSuccess(
         request: HttpServletRequest,
         response: HttpServletResponse,
         authentication: Authentication
     ) {
-
-        log.info { "OAuth2LoginSuccessHandler - onAuthenticationSuccess 시작" }
 
         try {
             val oAuth2User = authentication.principal as CustomOAuth2User
@@ -40,8 +36,6 @@ class OAuth2LoginSuccessHandler(
         } catch (e: Exception) {
             throw e
         }
-
-        log.info { "OAuth2LoginSuccessHandler - onAuthenticationSuccess 종료" }
 
     }
 

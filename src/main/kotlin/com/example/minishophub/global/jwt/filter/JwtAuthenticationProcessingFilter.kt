@@ -28,8 +28,6 @@ class JwtAuthenticationProcessingFilter(
     private val authoritiesMapper: GrantedAuthoritiesMapper = NullAuthoritiesMapper(),
 ) : OncePerRequestFilter() {
 
-    private val log = KotlinLogging.logger { }
-
     companion object {
         const val NO_CHECK_URL = "/login"
     }
@@ -60,8 +58,6 @@ class JwtAuthenticationProcessingFilter(
      */
     private fun checkRefreshTokenAndReIssueAccessToken(response: HttpServletResponse,
                                                        refreshToken: String) {
-        log.info { "JwtAuthenticationProcessingFilter - checkRefreshTokenAndReIssueAccessToken 시작" }
-
         val user = userRepository.findByRefreshToken(refreshToken)
         if (user != null) {
             val reIssueRefreshToken = reIssueRefreshToken(user)
@@ -71,18 +67,12 @@ class JwtAuthenticationProcessingFilter(
                 reIssueRefreshToken
             )
         }
-
-        log.info { "JwtAuthenticationProcessingFilter - checkRefreshTokenAndReIssueAccessToken 종료" }
     }
 
     private fun reIssueRefreshToken(user: User): String {
-        log.info { "JwtAuthenticationProcessingFilter - reIssueRefreshToken 시작" }
-
         val reIssuedRefreshToken = jwtService.createRefreshToken()
         user.updateRefreshToken(reIssuedRefreshToken)
         userRepository.saveAndFlush(user)
-
-        log.info { "JwtAuthenticationProcessingFilter - reIssueRefreshToken 종료" }
         return reIssuedRefreshToken
     }
 
@@ -91,23 +81,17 @@ class JwtAuthenticationProcessingFilter(
         response: HttpServletResponse,
         filterChain: FilterChain
     ) {
-        log.info { "JwtAuthenticationProcessingFilter - checkAccessTokenAndAuthentication 시작" }
-
         val accessToken = jwtService.extractAccessToken(request)
         val email = jwtService.extractEmail(accessToken)
         if (email != null) {
             val user = userRepository.findByEmail(email)
             saveAuthentication(user!!)
         }
-
-        log.info { "JwtAuthenticationProcessingFilter - checkAccessTokenAndAuthentication 종료" }
         filterChain.doFilter(request, response)
     }
 
     private fun saveAuthentication(user: User) {
         val password: String = PasswordUtil.generateRandomPassword()
-
-        log.info { "인증 정보 저장 시작" }
 
         val userDetailsUser = org.springframework.security.core.userdetails.User.builder()
             .username(user.email)
@@ -122,8 +106,6 @@ class JwtAuthenticationProcessingFilter(
         )
 
         SecurityContextHolder.getContext().authentication = authentication
-
-        log.info { "인증 정보 저장 종료" }
 
     }
 

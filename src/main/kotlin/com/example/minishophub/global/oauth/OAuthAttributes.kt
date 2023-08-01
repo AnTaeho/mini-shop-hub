@@ -15,8 +15,6 @@ class OAuthAttributes(
     val oAuth2UserInfo: OAuth2UserInfo,
 ) {
 
-    private val log = KotlinLogging.logger { }
-
     /**
      * SocialType 에 맞춰서 OAuthAttribute 객체 반환
      */
@@ -68,8 +66,6 @@ class OAuthAttributes(
      * OAuth2UserInfo 에서 정보를 가져와 User Entity 반환
      */
     fun toEntity(socialType: SocialType, oAuth2UserInfo: OAuth2UserInfo): User {
-
-        log.info { "OAuthAttributes - toEntity 동작" }
 
         return User(
             nickname = oAuth2UserInfo.getNickname()!!,

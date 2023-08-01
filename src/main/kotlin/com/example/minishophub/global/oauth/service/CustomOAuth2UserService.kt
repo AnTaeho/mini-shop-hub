@@ -19,8 +19,6 @@ class CustomOAuth2UserService(
     private val userRepository: UserRepository,
 ) : OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
-    private val log = KotlinLogging.logger { }
-
     companion object {
         const val NAVER = "naver"
         const val KAKAO = "kakao"
@@ -28,8 +26,6 @@ class CustomOAuth2UserService(
     }
 
     override fun loadUser(userRequest: OAuth2UserRequest): OAuth2User {
-
-        log.info { "CustomOAuth2UserService - loadUser 시작" }
 
         val delegate: OAuth2UserService<OAuth2UserRequest, OAuth2User> = DefaultOAuth2UserService()
         val oAuth2User = delegate.loadUser(userRequest)
@@ -39,8 +35,6 @@ class CustomOAuth2UserService(
         val attributes = oAuth2User.attributes
         val extractAttributes = OAuthAttributes.of(socialType, userNameAttributeName, attributes)
         val createUser: User = getUser(extractAttributes, socialType)
-
-        log.info { "CustomOAuth2UserService - loadUser 종료" }
 
         return CustomOAuth2User(
             Collections.singleton(SimpleGrantedAuthority(createUser.role.key)),

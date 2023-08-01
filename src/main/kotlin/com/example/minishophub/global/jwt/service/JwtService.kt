@@ -37,8 +37,6 @@ class JwtService (
         const val BEARER: String = "Bearer "
     }
 
-    private val log = KotlinLogging.logger { }
-
     /**
      * AccessToken 생성
      */
@@ -136,16 +134,12 @@ class JwtService (
      * RefreshToken DB 저장(업데이트)
      */
     fun updateRefreshToken(email: String, refreshToken: String) {
-        log.info { "JwtService - updateRefreshToken 시작" }
-
         val findUser = userRepository.findByEmail(email)
         if (findUser == null) {
             throw IllegalArgumentException("일치하는 회원이 없습니다.")
         } else {
             findUser.updateRefreshToken(refreshToken)
         }
-
-        log.info { "JwtService - updateRefreshToken 종료" }
     }
 
     fun isTokenValid(token: String): Boolean {
