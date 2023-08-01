@@ -57,6 +57,5 @@ class CustomJsonUsernamePasswordAuthenticationFilter(
 
         return this.authenticationManager.authenticate(authRequest)
 
-
     }
 }

@@ -24,6 +24,7 @@ class CustomOAuth2UserService(
     companion object {
         const val NAVER = "naver"
         const val KAKAO = "kakao"
+        const val GOOGLE = "google"
     }
 
     override fun loadUser(userRequest: OAuth2UserRequest): OAuth2User {
@@ -34,8 +35,7 @@ class CustomOAuth2UserService(
         val oAuth2User = delegate.loadUser(userRequest)
         val registrationId = userRequest.clientRegistration.registrationId
         val socialType = getSocialType(registrationId)
-        val userNameAttributeName =
-            userRequest.clientRegistration.providerDetails.userInfoEndpoint.userNameAttributeName
+        val userNameAttributeName = getUserNameAttribute(userRequest)
         val attributes = oAuth2User.attributes
         val extractAttributes = OAuthAttributes.of(socialType, userNameAttributeName, attributes)
         val createUser: User = getUser(extractAttributes, socialType)
@@ -51,11 +51,15 @@ class CustomOAuth2UserService(
         )
     }
 
+    private fun getUserNameAttribute(userRequest: OAuth2UserRequest): String =
+        userRequest.clientRegistration.providerDetails.userInfoEndpoint.userNameAttributeName
+
     private fun getSocialType(registrationId: String): SocialType {
         return when (registrationId) {
             NAVER -> SocialType.NAVER
             KAKAO -> SocialType.KAKAO
-            else -> SocialType.GOOGLE
+            GOOGLE -> SocialType.GOOGLE
+            else -> SocialType.NO_SOCIAL
         }
     }
 

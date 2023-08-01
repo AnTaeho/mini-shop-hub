@@ -121,9 +121,6 @@ class JwtAuthenticationProcessingFilter(
             authoritiesMapper.mapAuthorities(userDetailsUser.authorities)
         )
 
-        val userDetails = authentication.principal as UserDetails
-        println("userDetails.username = ${userDetails.username}")
-
         SecurityContextHolder.getContext().authentication = authentication
 
         log.info { "인증 정보 저장 종료" }

@@ -1,7 +1,6 @@
 package com.example.minishophub.global.config
 
 import com.example.minishophub.domain.user.persistence.UserRole
-import com.example.minishophub.domain.user.persistence.UserType
 import com.example.minishophub.domain.user.persistence.user.UserRepository
 import com.example.minishophub.global.jwt.filter.JwtAuthenticationProcessingFilter
 import com.example.minishophub.global.jwt.service.JwtService
@@ -9,14 +8,12 @@ import com.example.minishophub.global.login.filter.CustomJsonUsernamePasswordAut
 import com.example.minishophub.global.login.handler.LoginFailureHandler
 import com.example.minishophub.global.login.handler.LoginSuccessHandler
 import com.example.minishophub.global.login.service.LoginService
-import com.example.minishophub.global.logout.CustomLogoutSuccessHandler
 import com.example.minishophub.global.oauth.handler.OAuth2LoginFailureHandler
 import com.example.minishophub.global.oauth.handler.OAuth2LoginSuccessHandler
 import com.example.minishophub.global.oauth.service.CustomOAuth2UserService
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.http.HttpMethod
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.ProviderManager
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider
@@ -66,12 +63,6 @@ class SecurityConfig (
                     .userService(customOAuth2UserService)
                 }
             }
-            .logout {
-                it.logoutUrl("/logout")
-//                it.logoutSuccessHandler(CustomLogoutSuccessHandler(jwtService, userRepository))
-//                it.clearAuthentication(true)
-                it.logoutSuccessUrl("/jwt-test").permitAll()
-            }
             .addFilterBefore(customJsonUsernamePasswordAuthenticationFilter(), LogoutFilter::class.java)
             .addFilterAfter(jwtAuthenticationProcessingFilter(), CustomJsonUsernamePasswordAuthenticationFilter::class.java)
             .build()
@@ -96,7 +87,7 @@ class SecurityConfig (
     }
 
     /**
-     * 로그인 실패 시 호출되는 LoginFailureHandler 빈 등록
+     * 로그인 실패 시 호출 되는 LoginFailureHandler 빈 등록
      */
     @Bean
     fun loginFailureHandler(): LoginFailureHandler? {
