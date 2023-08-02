@@ -21,4 +21,12 @@ class KakaoOAuth2UserInfo(attributes: MutableMap<String, Any>) : OAuth2UserInfo(
         return (account!!["email"] as String?)!!
     }
 
+    override fun getImageUrl(): String? {
+        val account = attributes["kakao_account"] as Map<*, *>?
+        val profile = account!!["profile"] as Map<*, *>?
+
+        return if (profile == null) {
+            null
+        } else profile["thumbnail_image_url"] as String?
+    }
 }

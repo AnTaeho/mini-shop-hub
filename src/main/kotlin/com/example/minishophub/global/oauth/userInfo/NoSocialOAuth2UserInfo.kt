@@ -12,4 +12,8 @@ class NoSocialOAuth2UserInfo(attributes: MutableMap<String, Any>) : OAuth2UserIn
     override fun getEmail(): String? {
         return null
     }
+
+    override fun getImageUrl(): String? {
+        return null
+    }
 }

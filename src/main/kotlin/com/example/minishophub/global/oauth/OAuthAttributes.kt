@@ -5,7 +5,6 @@ import com.example.minishophub.domain.user.persistence.SocialType.*
 import com.example.minishophub.domain.user.persistence.user.User
 import com.example.minishophub.domain.user.persistence.UserRole
 import com.example.minishophub.global.oauth.userInfo.*
-import io.github.oshai.kotlinlogging.KotlinLogging
 
 /**
  * 각 소셜 별로 다르게 들어오는 정보를 처리하는 클래스
@@ -72,6 +71,8 @@ class OAuthAttributes(
             socialId = oAuth2UserInfo.getId()!!,
             socialType = socialType,
             email = oAuth2UserInfo.getEmail()!!,
+            providerEmail = "${oAuth2UserInfo.getId()}@${socialType.type}.com",
+            profile = oAuth2UserInfo.getImageUrl()!!,
             role = UserRole.GUEST,
             age = -1,
             password = "NOT_NEEDED",

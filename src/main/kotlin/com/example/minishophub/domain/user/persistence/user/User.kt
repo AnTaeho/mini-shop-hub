@@ -19,9 +19,11 @@ class User(
     var id: Long = 0L,
 
     var email: String,
+    var providerEmail: String = "only-social-login",
     var password: String,
     var nickname: String,
     var age: Int,
+    var profile: String = "no-image",
     var city: String,
     var socialId: String? = null,
     var refreshToken: String? = null,
