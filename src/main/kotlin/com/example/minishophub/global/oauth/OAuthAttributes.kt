@@ -1,9 +1,11 @@
 package com.example.minishophub.global.oauth
 
+import com.example.minishophub.domain.user.controller.dto.request.MailAuthRequest
 import com.example.minishophub.domain.user.persistence.SocialType
 import com.example.minishophub.domain.user.persistence.SocialType.*
 import com.example.minishophub.domain.user.persistence.user.User
 import com.example.minishophub.domain.user.persistence.UserRole
+import com.example.minishophub.domain.user.service.MailService
 import com.example.minishophub.global.oauth.userInfo.*
 
 /**
@@ -20,7 +22,7 @@ class OAuthAttributes(
     companion object {
         fun of(socialType: SocialType,
                userNameAttributeName: String,
-               attributes: MutableMap<String, Any>
+               attributes: MutableMap<String, Any>,
         ): OAuthAttributes {
             return when (socialType) {
                 NAVER -> ofNaver(userNameAttributeName, attributes)
@@ -34,28 +36,28 @@ class OAuthAttributes(
         private fun ofNaver(userNameAttributeName: String, attributes: MutableMap<String, Any>): OAuthAttributes {
             return OAuthAttributes(
                 userNameAttributeName,
-                NaverOAuth2UserInfo(attributes)
+                NaverOAuth2UserInfo(attributes),
             )
         }
 
         private fun ofKakao(userNameAttributeName: String, attributes: MutableMap<String, Any>): OAuthAttributes {
             return OAuthAttributes(
                 userNameAttributeName,
-                KakaoOAuth2UserInfo(attributes)
+                KakaoOAuth2UserInfo(attributes),
             )
         }
 
         private fun ofGoogle(userNameAttributeName: String, attributes: MutableMap<String, Any>): OAuthAttributes {
             return OAuthAttributes(
                 userNameAttributeName,
-                GoogleOAuth2UserInfo(attributes)
+                GoogleOAuth2UserInfo(attributes),
             )
         }
 
         private fun ofNothing(userNameAttributeName: String, attributes: MutableMap<String, Any>):  OAuthAttributes{
             return OAuthAttributes(
                 userNameAttributeName,
-                NoSocialOAuth2UserInfo(attributes)
+                NoSocialOAuth2UserInfo(attributes),
             )
         }
     }
@@ -64,7 +66,11 @@ class OAuthAttributes(
      * ofXXX 메서드로 OAuthAttribute 객체가 생성 되었고, 유저 정보가 담긴 OAuth2UserInfo 가 주입 된 상태
      * OAuth2UserInfo 에서 정보를 가져와 User Entity 반환
      */
-    fun toEntity(socialType: SocialType, oAuth2UserInfo: OAuth2UserInfo): User {
+    fun toEntity(socialType: SocialType, oAuth2UserInfo: OAuth2UserInfo, mailService: MailService): User {
+
+        val email = oAuth2UserInfo.getEmail()!!
+
+        mailService.sendAuthMail(MailAuthRequest(email))
 
         return User(
             nickname = oAuth2UserInfo.getNickname()!!,

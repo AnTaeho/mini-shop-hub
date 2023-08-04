@@ -16,7 +16,7 @@ class InitData(
     @PostConstruct
     fun makeAdminUser() {
         val user = User(
-            email = "an981022@naver.com",
+            email = "an981022@test.com",
             password = "admin123",
             nickname = "antaeho",
             age = 26,

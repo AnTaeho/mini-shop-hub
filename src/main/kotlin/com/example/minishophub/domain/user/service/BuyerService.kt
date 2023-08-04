@@ -4,11 +4,13 @@ import com.example.minishophub.domain.shop.persistence.ShopRepository
 import com.example.minishophub.domain.user.controller.dto.request.OAuth2UserUpdateRequest
 import com.example.minishophub.domain.user.controller.dto.request.UserJoinRequest
 import com.example.minishophub.domain.user.controller.dto.request.UserUpdateRequest
+import com.example.minishophub.domain.user.persistence.SocialType
 import com.example.minishophub.domain.user.persistence.user.User
 import com.example.minishophub.domain.user.persistence.user.UserRepository
 import com.example.minishophub.domain.user.persistence.UserRole
 import com.example.minishophub.domain.user.persistence.follow.Follow
 import com.example.minishophub.domain.user.persistence.follow.FollowRepository
+import com.example.minishophub.global.oauth.userInfo.OAuth2UserInfo
 import com.example.minishophub.global.util.fail
 import com.example.minishophub.global.util.findByIdOrThrow
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -36,7 +38,7 @@ class BuyerService (
             nickname = joinRequest.nickname,
             age = joinRequest.age,
             city = joinRequest.city,
-            role = UserRole.USER,
+            role = UserRole.GUEST,
         )
 
         user.passwordEncode(passwordEncoder)
@@ -45,6 +47,10 @@ class BuyerService (
 
     fun find(userId: Long): User {
         return userRepository.findByIdOrThrow(userId)
+    }
+
+    fun findByEmail(email: String): User? {
+        return userRepository.findByEmail(email)
     }
 
     @Transactional
@@ -101,6 +107,17 @@ class BuyerService (
         if (userRepository.findNickname(nickname) != null) {
             throw IllegalArgumentException("이미 존재하는 닉네임 입니다.")
         }
+    }
+
+    @Transactional
+    fun changerToOAuthUser(user: User, socialType: SocialType, oAuth2UserInfo: OAuth2UserInfo) {
+        user.updateToOAuth2(socialType, oAuth2UserInfo)
+    }
+
+    @Transactional
+    fun authorizeUser(email: String) {
+        val user = userRepository.findByEmail(email) ?: fail()
+        user.authorize()
     }
 
 

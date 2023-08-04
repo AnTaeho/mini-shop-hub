@@ -3,9 +3,9 @@ package com.example.minishophub.global.oauth.service
 import com.example.minishophub.domain.user.persistence.SocialType
 import com.example.minishophub.domain.user.persistence.user.User
 import com.example.minishophub.domain.user.persistence.user.UserRepository
+import com.example.minishophub.domain.user.service.MailService
 import com.example.minishophub.global.oauth.CustomOAuth2User
 import com.example.minishophub.global.oauth.OAuthAttributes
-import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest
@@ -17,6 +17,7 @@ import java.util.Collections
 @Service
 class CustomOAuth2UserService(
     private val userRepository: UserRepository,
+    private val mailService: MailService,
 ) : OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
     companion object {
@@ -65,7 +66,7 @@ class CustomOAuth2UserService(
     }
 
     private fun saveUser(attributes: OAuthAttributes, socialType: SocialType): User {
-        val createUser = attributes.toEntity(socialType, attributes.oAuth2UserInfo)
+        val createUser = attributes.toEntity(socialType, attributes.oAuth2UserInfo, mailService)
         return userRepository.save(createUser)
     }
 

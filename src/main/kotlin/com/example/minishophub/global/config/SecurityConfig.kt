@@ -50,7 +50,7 @@ class SecurityConfig (
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .authorizeHttpRequests {
                 it.requestMatchers("/","/css/**","/images/**","/js/**","/favicon.ico","/h2-console/**").permitAll()
-                it.requestMatchers("/sign-up").permitAll()
+                it.requestMatchers("/sign-up", "/mail/auth/**").permitAll()
                 it.requestMatchers("/owner/shop").hasRole(UserRole.SELLER_AUTHENTICATION_REQUIRED.name)
                 it.requestMatchers("/owner/**").hasRole(UserRole.SELLER_AUTHENTICATION_DONE.name)
                 it.requestMatchers("/admin/**").hasRole(UserRole.ADMIN.name)

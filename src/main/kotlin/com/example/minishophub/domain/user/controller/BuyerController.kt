@@ -1,12 +1,10 @@
 package com.example.minishophub.domain.user.controller
 
-import com.example.minishophub.domain.user.controller.dto.request.MailRequest
-import com.example.minishophub.domain.user.controller.dto.request.OAuth2UserUpdateRequest
-import com.example.minishophub.domain.user.controller.dto.request.UserJoinRequest
-import com.example.minishophub.domain.user.controller.dto.request.UserUpdateRequest
+import com.example.minishophub.domain.user.controller.dto.request.*
 import com.example.minishophub.domain.user.controller.dto.response.UserResponse
 import com.example.minishophub.domain.user.service.BuyerService
 import com.example.minishophub.domain.user.service.MailService
+import com.example.minishophub.global.jwt.service.JwtService
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.web.bind.annotation.*
@@ -15,6 +13,7 @@ import org.springframework.web.bind.annotation.*
 class BuyerController (
     private val buyerService: BuyerService,
     private val mailService: MailService,
+    private val jwtService: JwtService,
 ) {
 
     @PostMapping("/sign-up")
@@ -61,6 +60,19 @@ class BuyerController (
             throw IllegalArgumentException("본인 인증된 이메일이 아닙니다.")
         }
         mailService.sendResettingPasswordMail(mailRequest)
+    }
+
+    @GetMapping("/mail/auth")
+    fun authMail(@RequestBody mailAuthRequest: MailAuthRequest,
+                 @AuthenticationPrincipal userDetails: UserDetails) {
+        mailService.sendAuthMail(mailAuthRequest)
+    }
+
+    @PostMapping("/mail/auth/{accessToken}")
+    fun authorizeUserByMail(@PathVariable accessToken: String) {
+        val email = jwtService.extractEmail(accessToken)!!
+
+        buyerService.authorizeUser(email)
     }
 
     @GetMapping("/jwt-test")

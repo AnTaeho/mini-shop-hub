@@ -8,6 +8,7 @@ import com.example.minishophub.domain.user.controller.dto.request.UserUpdateRequ
 import com.example.minishophub.domain.user.persistence.SocialType
 import com.example.minishophub.domain.user.persistence.UserRole
 import com.example.minishophub.domain.user.persistence.UserType
+import com.example.minishophub.global.oauth.userInfo.OAuth2UserInfo
 import jakarta.persistence.*
 import org.springframework.security.crypto.password.PasswordEncoder
 
@@ -86,6 +87,18 @@ class User(
 
     fun updatePassword(password: String, passwordEncoder: PasswordEncoder) {
         this.password = passwordEncoder.encode(password)
+    }
+
+    fun updateToOAuth2(socialType: SocialType, oAuth2UserInfo: OAuth2UserInfo) {
+        this.socialType = socialType
+        this.nickname = oAuth2UserInfo.getNickname()!!
+        this.profile = oAuth2UserInfo.getImageUrl()!!
+        this.providerEmail = "${oAuth2UserInfo.getId()}@${socialType.type}.com"
+        this.socialId = oAuth2UserInfo.getId()
+    }
+
+    fun authorize() {
+        this.role = UserRole.USER
     }
 
     companion object {
