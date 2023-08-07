@@ -1,6 +1,7 @@
 package com.example.minishophub.domain.user.service
 
 import com.example.minishophub.domain.shop.persistence.ShopRepository
+import com.example.minishophub.domain.user.controller.dto.request.MailAuthRequest
 import com.example.minishophub.domain.user.controller.dto.request.OAuth2UserUpdateRequest
 import com.example.minishophub.domain.user.controller.dto.request.UserJoinRequest
 import com.example.minishophub.domain.user.controller.dto.request.UserUpdateRequest
@@ -10,6 +11,7 @@ import com.example.minishophub.domain.user.persistence.user.UserRepository
 import com.example.minishophub.domain.user.persistence.UserRole
 import com.example.minishophub.domain.user.persistence.follow.Follow
 import com.example.minishophub.domain.user.persistence.follow.FollowRepository
+import com.example.minishophub.global.jwt.service.JwtService
 import com.example.minishophub.global.oauth.userInfo.OAuth2UserInfo
 import com.example.minishophub.global.util.fail
 import com.example.minishophub.global.util.findByIdOrThrow
@@ -24,6 +26,8 @@ class BuyerService (
     private val passwordEncoder: PasswordEncoder,
     private val shopRepository: ShopRepository,
     private val followRepository: FollowRepository,
+    private val mailService: MailService,
+    private val jwtService: JwtService,
 ) {
 
     @Transactional
@@ -43,6 +47,8 @@ class BuyerService (
 
         user.passwordEncode(passwordEncoder)
         userRepository.save(user)
+
+        mailService.sendAuthMail(MailAuthRequest(joinRequest.email))
     }
 
     fun find(userId: Long): User {
@@ -115,9 +121,13 @@ class BuyerService (
     }
 
     @Transactional
-    fun authorizeUser(email: String) {
+    fun authorizeUser(email: String, accessToken: String) {
         val user = userRepository.findByEmail(email) ?: fail()
-        user.authorize()
+        if (jwtService.isTokenValid(accessToken)) {
+            user.authorize()
+        } else {
+            throw IllegalArgumentException("인증 실패")
+        }
     }
 
 
