@@ -3,7 +3,6 @@ package com.example.minishophub.global.oauth.handler
 import com.example.minishophub.domain.user.persistence.UserRole
 import com.example.minishophub.global.jwt.service.JwtService
 import com.example.minishophub.global.oauth.CustomOAuth2User
-import io.github.oshai.kotlinlogging.KotlinLogging
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.security.core.Authentication
@@ -27,7 +26,8 @@ class OAuth2LoginSuccessHandler(
             if (oAuth2User.role == UserRole.GUEST) {
                 val accessToken = jwtService.createAccessToken(oAuth2User.email)
                 response.addHeader(jwtService.accessHeader, "Bearer $accessToken")
-                response.sendRedirect("/jwt-test")
+                response.sendRedirect("/")
+                // 처음 회원 가입 성공시 엑세스 토큰을 발급 해준다.
                 jwtService.sendAccessAndRefreshToken(response, accessToken, null)
             } else {
                 loginSuccess(response, oAuth2User)

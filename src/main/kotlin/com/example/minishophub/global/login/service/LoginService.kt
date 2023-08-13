@@ -1,7 +1,6 @@
 package com.example.minishophub.global.login.service
 
 import com.example.minishophub.domain.user.persistence.user.UserRepository
-import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.security.core.userdetails.User
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService

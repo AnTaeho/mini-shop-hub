@@ -3,8 +3,8 @@ package com.example.minishophub.global.oauth
 import com.example.minishophub.domain.user.controller.dto.request.MailAuthRequest
 import com.example.minishophub.domain.user.persistence.SocialType
 import com.example.minishophub.domain.user.persistence.SocialType.*
-import com.example.minishophub.domain.user.persistence.user.User
 import com.example.minishophub.domain.user.persistence.UserRole
+import com.example.minishophub.domain.user.persistence.user.User
 import com.example.minishophub.domain.user.service.MailService
 import com.example.minishophub.global.oauth.userInfo.*
 

@@ -1,6 +1,6 @@
 package com.example.minishophub.global.jwt.util
 
-import java.util.Random
+import java.util.*
 
 class PasswordUtil {
 

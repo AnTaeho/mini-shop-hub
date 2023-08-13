@@ -4,7 +4,6 @@ import com.example.minishophub.domain.user.persistence.user.User
 import com.example.minishophub.domain.user.persistence.user.UserRepository
 import com.example.minishophub.global.jwt.service.JwtService
 import com.example.minishophub.global.jwt.util.PasswordUtil
-import io.github.oshai.kotlinlogging.KotlinLogging
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -12,7 +11,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper
 import org.springframework.security.core.authority.mapping.NullAuthoritiesMapper
 import org.springframework.security.core.context.SecurityContextHolder
-import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.web.filter.OncePerRequestFilter
 
 /**

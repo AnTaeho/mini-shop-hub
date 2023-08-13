@@ -6,11 +6,11 @@ import com.example.minishophub.domain.user.controller.dto.request.OAuth2UserUpda
 import com.example.minishophub.domain.user.controller.dto.request.UserJoinRequest
 import com.example.minishophub.domain.user.controller.dto.request.UserUpdateRequest
 import com.example.minishophub.domain.user.persistence.SocialType
-import com.example.minishophub.domain.user.persistence.user.User
-import com.example.minishophub.domain.user.persistence.user.UserRepository
 import com.example.minishophub.domain.user.persistence.UserRole
 import com.example.minishophub.domain.user.persistence.follow.Follow
 import com.example.minishophub.domain.user.persistence.follow.FollowRepository
+import com.example.minishophub.domain.user.persistence.user.User
+import com.example.minishophub.domain.user.persistence.user.UserRepository
 import com.example.minishophub.global.jwt.service.JwtService
 import com.example.minishophub.global.oauth.userInfo.OAuth2UserInfo
 import com.example.minishophub.global.util.fail
