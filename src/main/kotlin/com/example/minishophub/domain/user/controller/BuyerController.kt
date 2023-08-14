@@ -5,11 +5,8 @@ import com.example.minishophub.domain.user.controller.dto.response.UserResponse
 import com.example.minishophub.domain.user.service.BuyerService
 import com.example.minishophub.domain.user.service.MailService
 import com.example.minishophub.global.jwt.service.JwtService
-import com.example.minishophub.global.util.fail
 import jakarta.servlet.http.HttpServletResponse
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.annotation.AuthenticationPrincipal
-import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.web.bind.annotation.*
 
@@ -76,19 +73,7 @@ class BuyerController (
     fun authorizeUserByMail(@PathVariable accessToken: String,
                             response: HttpServletResponse) {
         val email = jwtService.extractEmail(accessToken)!!
-
         buyerService.authorizeUser(email, accessToken)
-
-        val user = buyerService.findByEmail(email) ?: fail()
-
-        val newAccessToken = jwtService.createAccessToken(email)
-        val refreshToken = jwtService.createRefreshToken()
-
-        jwtService.sendAccessAndRefreshToken(response, newAccessToken, refreshToken)
-
-        val token = UsernamePasswordAuthenticationToken(email, user.password)
-        val context = SecurityContextHolder.getContext()
-        context.authentication = token
 
     }
 
